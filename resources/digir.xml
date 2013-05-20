@@ -1,0 +1,22 @@
+<request xmlns='http://digir.net/schema/protocol/2003/1.0'
+    xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:digir='http://digir.net/schema/protocol/2003/1.0'
+    xmlns:darwin='http://digir.net/schema/conceptual/darwin/2003/1.0'
+    xmlns:dwc='http://digir.net/schema/conceptual/darwin/2003/1.0'
+    xsi:schemaLocation='http://digir.net/schema/protocol/2003/1.0 http://digir.sourceforge.net/schema/protocol/2003/1.0/digir.xsd http://digir.net/schema/conceptual/darwin/2003/1.0 http://digir.sourceforge.net/schema/conceptual/darwin/2003/1.0/darwin2.xsd'>
+    <header>
+        <version>$version</version>
+        <sendTime>{{time}}</sendTime>
+        <source>http://cncflora.jbrj.gov.br</source>
+        <destination resource='GBIF'>{{url}}</destination>
+        <type>search</type>
+    </header>
+    <search>
+            {{filters}}
+        <records limit="{{limit}}" start="{{start}}">		
+            <structure schemaLocation="http://digir.sourceforge.net/schema/conceptual/darwin/full/2003/1.0/darwin2full.xsd"/>
+        </records>
+        <count>$count</count>
+    </search>
+</request>

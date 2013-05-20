@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<request 
+    xmlns="http://rs.tdwg.org/tapir/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://rs.tdwg.org/tapir/1.0 
+                        http://rs.tdwg.org/tapir/1.0/schema/tapir.xsd">
+  <header>
+    <source sendtime="{{time}}">
+      <software name="http://github.com/cncflora/dwc" version="1.0"/>
+    </source>
+  </header>
+  <search count="true" start="{{start}}" limit="{{limit}}" envelope="true">
+    <outputModel>
+      <structure>
+        <xs:schema targetNamespace="http://example.net/simple_specimen" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+          <xs:element name="records">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="record" minOccurs="0" maxOccurs="unbounded" type="unitType">
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:complexType name="unitType">
+            <xs:sequence>
+                {{terms}}
+            </xs:sequence>
+          </xs:complexType>
+        </xs:schema>
+      </structure>
+      <indexingElement path="/records/record"/>
+      <mapping>
+          {{nodes}}
+      </mapping>
+    </outputModel>
+    <filter>
+        {{filters}}
+    </filter>
+  </search>
+</request>

@@ -1,0 +1,3 @@
+<node path="/records/record/{{alias}}">
+    <concept id="{{concept}}"/>
+</node>

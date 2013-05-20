@@ -1,0 +1,4 @@
+<equals>
+    <concept id="{{concept}}"/>
+    <literal value="{{value}}"/>
+</equals>
