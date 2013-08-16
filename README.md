@@ -18,8 +18,7 @@ Missing features:
 
 ### From Clojure
 
-    (use 'dwc.archive 'dwc.tapir 'dwc.digir)
-
+    (use 'dwc.archive)
     (let [occurrences (read-archive "url for dwc-a zip")]
       (comment "occurrences is a vector of maps, with dwc fields as keywords keys"))
 
@@ -27,11 +26,13 @@ Missing features:
      (fn [occurrence]
       (comment "reads the archive as a stream")))
 
+    (use 'dwc.tapir)
     (let [opts {:fields ["ScientificName"] :filters {"Family" "BROMELIACEAE"} :start 10 :limit 30}
           records (read-tapir "url" opts)]
      (comment "all options are optional, any combination is valid")
      (comment "comes back as {:records [{recordhere}] :summary {:start 10 :next 30 :total 1000 :end false}}"))
 
+    (use 'dwc.digir)
     (let [opts {:filters {"Family" "BROMELIACEAE"} :start 10 :limit 30}
           records (read-digir "url" opts)]
      (comment "all options are optional, any combination is valid")

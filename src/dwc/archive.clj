@@ -5,15 +5,15 @@
   (:import [java.util.zip ZipFile]))
 
 (defn download
-  "Download given URL zip into /tmp and return the File"
+  "Download given URL zip into system temp dir and return the File"
   [url]
-  (let [path (str "/tmp/" (hash url))]
+  (let [path (str (System/getProperty("java.io.tmpdir")) (hash url))]
     (if-not (.exists (file path))
       (copy (input-stream (as-url url)) (file path)))
     (file path)))
 
 (defn term2name
-  "Takes a DwC term and turn into a nice name keyword"
+  "Takes a DwC term and turn it into a nice name keyword"
   [term] (keyword (.substring term 
                    (inc (.lastIndexOf term "/")))))
 
@@ -68,7 +68,7 @@
                [(:name field) (get line (:index field))])))))))))
 
 (defn read-archive
-  "Read the DwC-A as a whole"
+  "Read the DwC-A as a whole returning all occurrences as a vector"
   [url]
   (let [occs (atom [])]
     (read-archive-stream url
