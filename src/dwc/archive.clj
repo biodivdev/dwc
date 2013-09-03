@@ -7,9 +7,11 @@
 (defn download
   "Download given URL zip into system temp dir and return the File"
   [url]
-  (let [path (str (System/getProperty("java.io.tmpdir")) (hash url))]
+  (let [path (str (System/getProperty "java.io.tmpdir") "/" (hash url))]
     (if-not (.exists (file path))
-      (copy (input-stream (as-url url)) (file path)))
+      (do
+        (.createNewFile (file path))
+        (copy (input-stream (as-url url)) (file path))))
     (file path)))
 
 (defn term2name
@@ -21,7 +23,7 @@
   "Find the 'core' tag of a DwC-A"
   [zip]
   (let [metaxml (parse (reader 
-                  (.getInputStream zip (.getEntry zip "meta.xml"))))]
+                  (.getInputStream zip (.getEntry zip "/meta.xml"))))]
     (first (filter #(= :core (:tag %)) (:content metaxml)))))
 
 (defn get-char
@@ -57,7 +59,7 @@
         file (get-file core)
         config (get-config core)
         fields  (get-fields core)]
-    (with-open [incsv (reader (.getInputStream zip (.getEntry zip file)))]
+    (with-open [incsv (reader (.getInputStream zip (.getEntry zip (str "/" file))))]
       (let [csv    (read-csv incsv :separator (:separator config) )
             lines  (if (:ignoreFirst config) (rest csv) csv)]
         (doseq [line lines]
