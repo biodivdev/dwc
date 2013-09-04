@@ -5,6 +5,6 @@
 (def test-file "resources/dwc.csv")
 
 (fact "Can read csv into hash-map"
-  (read-csv test-file) => [{:scientificName "Aphelandra longiflora" :latitude "10.10" :longitude "20.20"}
-                           {:scientificName "Vicia faba" :latitude "30.3" :longitude "8.9"}])
+  (read-csv test-file) => [{:scientificName "Aphelandra longiflora" :latitude "10.10" :longitude "20.20" :locality "riverrun"}
+                           {:scientificName "Vicia faba" :latitude "30.3" :longitude "8.9" :locality ""}])
 
