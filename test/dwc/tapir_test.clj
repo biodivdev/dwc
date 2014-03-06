@@ -2,7 +2,7 @@
   (:use midje.sweet)
   (:use dwc.tapir))
 
-(def test-url "http://tapirlink.jbrj.gov.br/tapir.php/RBdna")
+(def test-url "http://tapirlink.jbrj.gov.br/tapir.php/RBw")
 
   (fact "Can create proper XML for request"
       (let [xml0 (make-xml)
@@ -62,7 +62,7 @@
   (fact "Can read a tapir source"
     (let [occurrences (read-tapir test-url {:fields ["ScientificName" "InstitutionCode"]})]
       (:ScientificName (first (:records occurrences)))
-         => "BROMELIACEAE"
+         => "LEGUMINOSAE"
       (:InstitutionCode (first (:records occurrences)))
          => "JBRJ"
       (:end (:summary occurrences)) 
