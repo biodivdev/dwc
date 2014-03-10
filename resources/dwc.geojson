@@ -1,0 +1,27 @@
+{
+    "type":"FeatureCollection",
+    "features":[
+        {
+            "type":"Feature",
+            "properties": {
+                "scientificName":"Aphelandra longiflora",
+                "locality":"riverrun"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates":[ 20.20,10.10 ]
+            }
+        },
+        {
+            "type":"Feature",
+            "properties": {
+                "scientificName":"Vicia faba",
+                "locality":""
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates":[ 8.9,30.3 ]
+            }
+        }
+    ]
+}

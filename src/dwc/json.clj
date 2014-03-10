@@ -18,10 +18,7 @@
     (deref occs)))
 
 (defn write-json
-  ""
-  [occurrences] nil)
-
-(defn write-json
   "Write a json from occurrences data"
   [occurrences] 
    (write-str occurrences))
+
