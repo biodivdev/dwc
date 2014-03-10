@@ -3,16 +3,13 @@
 This is a simple clojure/java library for accessing and reading DwC-A, TAPIR and DIGIR data sources, for occurrences and checklists.
 
 Current features:
-- Occurrences from DwC-A
-- Stream from DwC-A for larger sets
-- Occurrences from Tapir
-- Occurrences from Digir
+- Reading, streaming and writing from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR
 - Filters and pagging on Tapir
 - Filters and pagging on Digir
 
 Missing features:
-- Support checklists on DwC-A 
 - Java Interface
+- Writing on DwC-A, XLSX, 
 
 ## Usage
 
@@ -37,6 +34,28 @@ Missing features:
     (read-csv-stream "path-to.csv"
       (function [occurrence]
         (comment "reads the csv as a stream")))
+
+#### JSON & GeoJSON
+
+    (use 'dwc.json) 
+    (let [occurrences (read-json "path-to.json")]
+      (comment "occurrences is a vector of maps, with dwc fields as keywords keys")))
+
+    (read-json-stream "path-to.json"
+      (function [occurrence]
+        (comment "reads the json as a stream")))
+
+    (use 'dwc.geojson) 
+    (let [occurrences (read-geojson "path-to.xlsx")]
+      (comment "occurrences is a vector of maps, with dwc fields as keywords keys")))
+
+    (read-geojson-stream "path-to.xlsx"
+      (function [occurrence]
+        (comment "reads the geojson as a stream")))
+
+    (comment "Support writing")
+    (spit "occs.gjson" (write-geojson {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"}))
+    (spit "occs.json" (write-json {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"}))
 
 #### XLSX
 
