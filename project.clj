@@ -8,6 +8,7 @@
                  [org.clojure/data.csv "0.1.2"]
                  [org.clojure/data.json "0.2.4"]
                  [dk.ative/docjure "1.6.0"]
+                 [bigml/closchema "0.5"]
                  [clj-http "0.7.6"]]
   :profiles {:dev {:dependencies [[midje "1.5.1"]]
                    :plugins [[lein-midje "3.1.0"]]}})
