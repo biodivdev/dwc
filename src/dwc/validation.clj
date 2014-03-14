@@ -5,7 +5,7 @@
 (comment "http://rs.tdwg.org/dwc/terms/")
 
 (def dwc-schema
-  (read-str (slurp "resources/schema.json") :key-fn keyword))
+  (read-str (slurp (clojure.java.io/resource "schema.json") ) :key-fn keyword))
 
 (defn validate
   "Validate an occurrence entry"
