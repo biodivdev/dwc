@@ -4,12 +4,13 @@
 
 (comment "http://rs.tdwg.org/dwc/terms/")
 
-(def dwc
+(def dwc-schema
   (read-str (slurp "resources/schema.json") :key-fn keyword))
 
 (defn validate
   "Validate an occurrence entry"
   [occ] 
-   (if-not (schema/validate dwc occ)
-     (schema/report-errors (schema/validate dwc occ)) 
+   (if-not (schema/validate dwc-schema occ)
+     (schema/report-errors (schema/validate dwc-schema occ)) 
       true))
+
