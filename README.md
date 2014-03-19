@@ -3,17 +3,24 @@
 This is a simple clojure/java library for accessing and reading DwC-A, TAPIR and DIGIR data sources, for occurrences and checklists.
 
 Current features:
-- Reading, streaming and writing from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR
-- Filters and pagging on Tapir
-- Filters and pagging on Digir
+- Reading and streaming from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR
+- Writing to: JSON, GEOJSON
+- Search, Filters and pagging on Tapir and Digir
+- Validate records
+- Apply common fixes
 
 Missing features:
 - Java Interface
-- Writing on DwC-A, XLSX, 
+- Finish validation
+- Writing on DwC-A, XLSX and CSV
 
 ## Usage
 
 ### From Clojure
+
+Include in your project.clj
+
+    [dwc "0.0.6"]
 
 ### DwC-A
 
@@ -83,6 +90,26 @@ Missing features:
      (comment "all options are optional, any combination is valid")
      (comment "comes back as {:records [{recordhere}] :summary {:total 1000 :start 10 :limit 30 :end false}}"))
 
+#### Applying fixes
+
+    (use 'dwc.fixes)
+
+    (fix-id occurrence)
+    (comment "tries to generate an occurrenceID, if not present, based on institution+collection+number")
+
+    (fix-coords occurrence)
+    (Comment "trie to convert degree latitude longitude fields into decimalLatitude and decimalLongitude")
+
+    (-fix-> occurrence)
+    (comment "apply all fixes, in single or vector of occurrences")
+
+#### Validation
+
+    (use 'dwc.validation)
+
+    (validate occurrence)
+    (comment "tries to validate occurrence based on information of http://rs.tdwg.org/dwc/terms/")
+
 ### From Java
 
 Soon
@@ -91,5 +118,5 @@ Soon
 
 Copyright © 2013 Centro Nacional de Conservação da Flora, Instituto de Pesquisa Jardim Botânico do Rio de Janeiro.
 
-Distributed under the Eclipse Public License.
+Distributed under the Apache License 2.0.
 
