@@ -95,8 +95,8 @@
         "verbatimLongitude":{"type":"string"}
         "verbatimCoordinateSystem":{"type":"string"}
         "verbatimSRS":{"type":"string"}
-        "decimalLatitude":{"type":"string"}
-        "decimalLongitude":{"type":"string"}
+        "decimalLatitude":{"type":"number"}
+        "decimalLongitude":{"type":"number"}
         "geodeticDatum":{"type":"string"}
         "coordinateUncertaintyInMeters":{"type":"string"}
         "coordinatePrecision":{"type":"string"}
