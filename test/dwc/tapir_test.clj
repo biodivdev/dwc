@@ -62,7 +62,7 @@
   (fact "Can read a tapir source"
     (let [occurrences (read-tapir test-url {:fields ["ScientificName" "InstitutionCode"]})]
       (:ScientificName (first (:records occurrences)))
-         => "LEGUMINOSAE"
+         => "Indet."
       (:InstitutionCode (first (:records occurrences)))
          => "JBRJ"
       (:end (:summary occurrences)) 
