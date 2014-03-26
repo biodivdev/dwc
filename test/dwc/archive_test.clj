@@ -2,8 +2,8 @@
   (:use dwc.archive)
   (:use midje.sweet))
 
-(def test-url (clojure.java.io/resource "dwca-occurrences.zip" ))
-(comment (def test-url2 (clojure.java.io/resource "dwca-taxons.zip")))
+(def test-url "http://data.canadensys.net/ipt/archive.do?r=win-vascular-specimens")
+(def test-url2 "http://ipt.jbrj.gov.br/ipt/archive.do?r=redlist_2013_taxons")
 
 (fact "Can find core tag, config of csv and fields."
   (let [zip    (java.util.zip.ZipFile. (download test-url))
@@ -13,7 +13,7 @@
         config (get-config core)]
     (:tag core) => :core
     file => "occurrence.txt"
-    config => {:separator \tab :ignoreFirst true :quote nil}
+    config => {:separator \tab :ignoreFirst true :quote \u0000}
     (first fields) => {:index 1  :name :type}
     (last  fields) => {:index 47 :name :nomenclaturalCode}))
 
@@ -22,9 +22,7 @@
    (:scientificName (first occurrences)) => "Polypodium sibiricum Sipl."
    (:recordedBy (last occurrences)) => "D. Punter"))
 
-(comment
-  (fact "Can read DwC-A taxons"
-    (let [taxons (read-archive test-url2)]
-      (println taxons)
-      (:scientificName (first taxons)) => "Agaricales")))
+(fact "Can read DwC-A taxons"
+  (let [taxons (read-archive test-url2)]
+    (:scientificName (first taxons)) => "Micropholis caudata"))
 

@@ -30,7 +30,7 @@
   "Transform the separator/quote csv char properly"
   [sep]
   (if (= "\\t" sep) \tab 
-    (if (= "" sep) nil  
+    (if (= "" sep) \u0000  
     (if (> (.length sep) 0) (.charAt sep 0)))))
 
 (defn get-config
@@ -60,7 +60,7 @@
         config (get-config core)
         fields  (get-fields core)]
     (with-open [incsv (reader (.getInputStream zip (.getEntry zip (str "/" file))))]
-      (let [csv    (read-csv incsv :separator (:separator config) )
+      (let [csv    (read-csv incsv :separator (:separator config) :quote (:quote config))
             lines  (if (:ignoreFirst config) (rest csv) csv)]
         (doseq [line lines]
          (fun
