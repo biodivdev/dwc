@@ -25,39 +25,39 @@ Include in your project.clj
 ### DwC-A
 
     (use 'dwc.archive)
-    (let [occurrences (read-archive "url for dwc-a zip")]
-      (comment "occurrences is a vector of maps, with dwc fields as keywords keys"))
+    (let [records (read-archive "url for dwc-a zip")]
+      (comment "records is a vector of maps, with dwc fields as keywords keys"))
 
     (read-archive-stream "url for dwc-a zip" 
-     (fn [occurrence]
+     (fn [record]
       (comment "reads the archive as a stream")))
 
 #### CSV, using ','(comma) as  separator and '"'(double-quotes) as quote
 
     (use 'dwc.csv) 
-    (let [occurrences (read-csv "path-to.csv")]
-      (comment "occurrences is a vector of maps, with dwc fields as keywords keys")))
+    (let [records (read-csv "path-to.csv")]
+      (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
     (read-csv-stream "path-to.csv"
-      (function [occurrence]
+      (function [record]
         (comment "reads the csv as a stream")))
 
 #### JSON & GeoJSON
 
     (use 'dwc.json) 
-    (let [occurrences (read-json "path-to.json")]
-      (comment "occurrences is a vector of maps, with dwc fields as keywords keys")))
+    (let [records (read-json "path-to.json")]
+      (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
     (read-json-stream "path-to.json"
-      (function [occurrence]
+      (function [record]
         (comment "reads the json as a stream")))
 
     (use 'dwc.geojson) 
-    (let [occurrences (read-geojson "path-to.xlsx")]
-      (comment "occurrences is a vector of maps, with dwc fields as keywords keys")))
+    (let [records (read-geojson "path-to.xlsx")]
+      (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
     (read-geojson-stream "path-to.xlsx"
-      (function [occurrence]
+      (function [record]
         (comment "reads the geojson as a stream")))
 
     (comment "Support writing")
@@ -67,11 +67,11 @@ Include in your project.clj
 #### XLSX
 
     (use 'dwc.xlsx) 
-    (let [occurrences (read-xlsx "path-to.xlsx")]
-      (comment "occurrences is a vector of maps, with dwc fields as keywords keys")))
+    (let [records (read-xlsx "path-to.xlsx")]
+      (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
     (read-xlsx-stream "path-to.xlsx"
-      (function [occurrence]
+      (function [record]
         (comment "reads the xlsx as a stream")))
 
 #### Tapir
@@ -94,21 +94,21 @@ Include in your project.clj
 
     (use 'dwc.fixes)
 
-    (fix-id occurrence)
-    (comment "tries to generate an occurrenceID, if not present, based on institution+collection+number")
+    (fix-id record)
+    (comment "tries to generate an recordID, if not present, based on institution+collection+number")
 
-    (fix-coords occurrence)
+    (fix-coords record)
     (Comment "trie to convert degree latitude longitude fields into decimalLatitude and decimalLongitude")
 
-    (-fix-> occurrence)
-    (comment "apply all fixes, in single or vector of occurrences")
+    (-fix-> record)
+    (comment "apply all fixes, in single or vector of records")
 
 #### Validation
 
     (use 'dwc.validation)
 
-    (validate occurrence)
-    (comment "tries to validate occurrence based on information of http://rs.tdwg.org/dwc/terms/")
+    (validate record)
+    (comment "tries to validate record based on information of http://rs.tdwg.org/dwc/terms/")
 
 ### From Java
 
