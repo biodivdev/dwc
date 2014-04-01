@@ -32,6 +32,21 @@
        )
    ))
 
+(defn fix-decimal-latlng
+  ""
+  [occ] 
+   (if-let [lat (:decimalLatitude occ)]
+    (if-let [lng (:decimalLongitude occ)]
+     (assoc occ :decimalLatitude (Double/valueOf lat) :decimalLongitude (Double/valueOf lng))
+      occ) occ))
+
+(defn fix-strings
+  ""
+  [occ]
+   (reduce merge {}
+    (for [kv occ]
+      (hash-map (key kv) (.toString (val kv))))))
+
 (defn fix-id
   ""
   [occ] 
@@ -52,6 +67,8 @@
    (if (vector? data) 
       (map -fix-> data)
       (-> data
+          fix-strings
           fix-id
+          fix-decimal-latlng
           fix-coords)))
 

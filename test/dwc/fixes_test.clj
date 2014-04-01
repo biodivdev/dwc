@@ -26,10 +26,20 @@
     => {:institutionCode "inst" :collectionCode "col" :catalogNumber "num" :occurrenceID "urn:occurrence:inst:col:num"}
   )
 
+(fact "Fix decimal lat lng"
+ (fix-decimal-latlng {:decimalLatitude "10.10" :decimalLongitude "20.20"})
+  => {:decimalLatitude 10.10 :decimalLongitude 20.20})
+
+(fact "Fix strings" 
+  (fix-strings {:id 123}) 
+    => {:id "123"})
+
 (fact "apply many fixes"
   (-fix-> {:id "123"})
       => {:occurrenceID "123" :id "123"}
   (-fix-> [ {:id "123"} {:id "321"}])
       => [{:occurrenceID "123" :id "123"} {:occurrenceID "321" :id "321"}]
+  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20"})
+      => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
   )
 
