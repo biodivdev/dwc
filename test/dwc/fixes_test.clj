@@ -31,7 +31,7 @@
   => {:decimalLatitude 10.10 :decimalLongitude 20.20})
 
 (fact "Fix strings" 
-  (fix-strings {:id 123}) 
+  (fix-strings {:id 123 :recordNumber nil}) 
     => {:id "123"})
 
 (fact "apply many fixes"

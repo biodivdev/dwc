@@ -45,7 +45,8 @@
   [occ]
    (reduce merge {}
     (for [kv occ]
-      (hash-map (key kv) (.toString (val kv))))))
+      (if (not (nil? (val kv)))
+        (hash-map (key kv) (.toString (val kv)))))))
 
 (defn fix-id
   ""
