@@ -27,8 +27,11 @@
   )
 
 (fact "Fix decimal lat lng"
- (fix-decimal-latlng {:decimalLatitude "10.10" :decimalLongitude "20.20"})
-  => {:decimalLatitude 10.10 :decimalLongitude 20.20})
+ (fix-decimal-lat {:decimalLatitude "10.10" :decimalLongitude "20.20"})
+  => {:decimalLatitude 10.10 :decimalLongitude "20.20"}
+ (fix-decimal-long {:decimalLatitude "10.10" :decimalLongitude "20.20"})
+  => {:decimalLatitude "10.10" :decimalLongitude 20.20}
+      )
 
 (fact "Fix strings" 
   (fix-strings {:id 123 :recordNumber nil}) 
@@ -39,7 +42,7 @@
       => {:occurrenceID "123" :id "123"}
   (-fix-> [ {:id "123"} {:id "321"}])
       => [{:occurrenceID "123" :id "123"} {:occurrenceID "321" :id "321"}]
-  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20"})
+  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
       => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
   )
 

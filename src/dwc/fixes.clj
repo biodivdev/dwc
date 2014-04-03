@@ -32,13 +32,23 @@
        )
    ))
 
-(defn fix-decimal-latlng
+(defn fix-decimal-long
   ""
   [occ] 
-   (if-let [lat (:decimalLatitude occ)]
-    (if-let [lng (:decimalLongitude occ)]
-     (assoc occ :decimalLatitude (Double/valueOf lat) :decimalLongitude (Double/valueOf lng))
-      occ) occ))
+   (if (and (not (nil? (:decimalLongitude occ)))
+            (string? (:decimalLongitude occ))
+            (> (count (:decimalLongitude occ)) 0))
+     (assoc occ :decimalLongitude (Double/valueOf (:decimalLongitude occ)))
+     occ))
+
+(defn fix-decimal-lat
+  ""
+  [occ] 
+   (if (and (not (nil? (:decimalLatitude occ)))
+            (string? (:decimalLatitude occ))
+            (> (count (:decimalLatitude occ)) 0))
+     (assoc occ :decimalLatitude (Double/valueOf (:decimalLatitude occ)))
+     occ))
 
 (defn fix-strings
   ""
@@ -47,6 +57,14 @@
     (for [kv occ]
       (if (not (nil? (val kv)))
         (hash-map (key kv) (.toString (val kv)))))))
+
+(defn fix-empties
+  ""
+  [occ]
+   (reduce merge {}
+    (for [kv occ]
+      (if (and (not (empty? (val kv))) (not (nil? (val kv))))
+        (hash-map (key kv) (val kv))))))
 
 (defn fix-id
   ""
@@ -69,7 +87,9 @@
       (map -fix-> data)
       (-> data
           fix-strings
+          fix-empties
           fix-id
-          fix-decimal-latlng
+          fix-decimal-lat
+          fix-decimal-long
           fix-coords)))
 
