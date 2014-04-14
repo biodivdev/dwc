@@ -44,5 +44,7 @@
       => [{:occurrenceID "123" :id "123"} {:occurrenceID "321" :id "321"}]
   (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
       => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
+  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber "" :day 10 :month "11"})
+      => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20 :day "10" :month "11"}
   )
 
