@@ -19,6 +19,9 @@
                 (:content (first (:content 
                   (parse (java.io.StringReader. (slurp url))))))))))))
 
+(def concepts-0
+  (make-concepts (resource "tapir_terms1.xml")))
+
 (def concepts 
   (reduce merge 
     [(make-concepts (resource "tapir_terms1.xml"))
@@ -26,17 +29,44 @@
      (make-concepts (resource "tapir_terms3.xml"))
      (make-concepts (resource "tapir_terms4.xml"))]))
 
+(defn get-capabilities
+  "Read the capabilities(specially the fields)"
+  [url] 
+   (let [res (http/get (str url "?op=c&xslt=http://tapirlink.jbrj.gov.br/skins/darwin/capabilities.xsl"))
+          xml (parse (java.io.StringReader. (:body res)))]
+     {:fields
+       (reduce merge
+         (map (fn [concept] 
+                (let [concept-name (.substring concept (+ (.lastIndexOf concept "/") 1))]
+                 (hash-map concept-name concept)))
+           (map :id (map :attrs
+             (filter #(= :mappedConcept (:tag %))
+               (:content (first
+                 (filter #(= :schema (:tag %))
+                   (:content (first
+                     (filter #(= :concepts (:tag %))
+                       (:content (first
+                         (filter #(= :capabilities (:tag %))
+                            (:content xml))))))))))))))) 
+      }))
+
+
+(def default-fields
+     (vec (filter #(and (not (nil? %)) (not (empty? %)) (not (.startsWith % "#")) )
+       (clojure.string/split (slurp (clojure.java.io/resource "tapir_terms_default.txt")) #"\n"))))
+
 (defn turn-fields
   "Turn simple fields into concepts mapping"
-  [fields]
-  (if (or (nil? fields) (empty? fields)) concepts
+  [url fields]
+  (if (or (nil? fields) (empty? fields)) 
+   (turn-fields url default-fields)
     (reduce merge
       (map #(hash-map % (concepts %)) 
         fields))))
 
 (defn turn-filters
   "Turn simple filters into concepts filters"
-  [filters]
+  [url filters]
   (if (or (nil? filters) (empty? filters)) {}
     (reduce merge
       (map #(hash-map (concepts (key %)) (val %)) 
@@ -44,10 +74,10 @@
 
 (defn make-xml 
   "Creates the request XML with proper params"
-  ([] (make-xml {}))
-  ([opts]
-    (let [fields  (turn-fields (:fields opts))
-          filters (turn-filters (:filters opts))
+  ([url] (make-xml url {}))
+  ([url opts]
+    (let [fields  (turn-fields url (:fields opts))
+          filters (turn-filters url (:filters opts))
           start   (if (nil? (:start opts)) 0 (:start opts))
           limit   (if (nil? (:limit opts)) 20 (:limit opts))]
       (-> template
@@ -104,11 +134,20 @@
         )
     ))
 
+(defn lower-first
+  [tag]
+   (keyword
+   (clojure.string/replace
+     (name tag)
+     #"^([A-Z])(.*)$"
+    (fn [args] 
+      (str (.toLowerCase (second args)) (last args))))))
+
 (defn get-record
   "Get, parse and map a single record"
   [el]
-   (let [pairs (map #(hash-map (:tag %) 
-                              (first (:content %))) el)]
+   (let [pairs (map #(hash-map (lower-first (:tag %))
+                (first (:content %))) el)]
      (apply merge pairs)))
 
 (defn get-records
@@ -126,9 +165,9 @@
   "Read the summary and records from a URL tapir"
   ([url] (read-tapir url {}))
   ([url opts]
-   (let [res (http/post url {:body (make-xml opts) :headers {"Content-Type" "application/xml"}})
+   (let [res (http/post url {:body (make-xml url opts) :headers {"Content-Type" "application/xml"}})
          xml (parse (java.io.StringReader. (:body res)))]
-     (if (not (empty? (filter #(= :error (:tag %)) (:content xml ))))
+     (if (not (empty? (filter #(= :error (:tag %)) (:content xml))))
        {:errors (map #(:content (first (:content %))) (filter #(= :diagnostics (:tag %)) (:content xml)))}
        {:summary (get-summary xml) :records (get-records xml)})
      )))
