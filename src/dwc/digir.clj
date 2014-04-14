@@ -60,10 +60,10 @@
   ""
   [xml req] 
   (let [diags (:content (get-diags xml))]
-    {:total (Integer/parseInt (first (:content (first (filter #(= "RECORD_COUNT" (get-in % [:attrs :code])) diags)))))
+    {:total (Integer/valueOf (first (:content (first (filter #(= "RECORD_COUNT" (get-in % [:attrs :code])) diags)))))
      :end   (= "true" (first (:content (first (filter #(= "END_OF_RECORDS" (get-in % [:attrs :code])) diags)))))
-     :start (Integer/parseInt (second (re-find #"start=\"(\d+)\"" req) ))
-     :limit (Integer/parseInt (second (re-find #"limit=\"(\d+)\"" req) ))}))
+     :start (Integer/valueOf (second (re-find #"start=\"(\d+)\"" req) ))
+     :limit (Integer/valueOf (second (re-find #"limit=\"(\d+)\"" req) ))}))
 
 (defn read-digir 
   ""

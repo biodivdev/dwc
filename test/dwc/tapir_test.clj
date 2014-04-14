@@ -62,10 +62,12 @@
   (fact "Can read a tapir source"
     (let [occurrences (read-tapir test-url {:fields ["ScientificName" "InstitutionCode"]})]
       (:ScientificName (first (:records occurrences)))
-         => "Indet."
+         => "CANELLACEAE"
       (:InstitutionCode (first (:records occurrences)))
          => "JBRJ"
       (:end (:summary occurrences)) 
-         => false
-      ))
+         => false)
+    (let [occurrences (read-tapir test-url {:fields ["ScientificName"] :filters {"Family" "ACANTHACEAE"}})]
+      (:ScientificName (first (:records occurrences)))
+         => "Mendoncia velloziana Mart."))
   

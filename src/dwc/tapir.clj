@@ -68,13 +68,14 @@
               ))))
         (.replace "{{filters}}" 
           (if (empty? filters) ""
-            (str "<and>"
+            (str (if (> (count filters) 1) "<and>")
               (reduce str 
                 (for [kv filters]
                   (-> afilter
                       (.replace "{{concept}}" (key kv))
-                      (.replace "{{value}}" (val kv)))))
-                   "</and>")
+                    (.replace "{{value}}" (val kv)))))
+               (if (> (count filters) 1) "</and>")
+               )
             ))
           ))))
 
@@ -94,12 +95,12 @@
                     (filter #(= :summary (:tag %))
                       (get-search xml))))]
     (-> summary 
-        (assoc :total (Integer/parseInt (:totalMatched summary)))
-        (assoc :start (Integer/parseInt (:start summary)))
-        (assoc :next (Integer/parseInt (:next summary)))
+        (assoc :total (Integer/valueOf (or (:totalMatched summary) 0)))
+        (assoc :start (Integer/valueOf (or (:start summary) 0)))
+        (assoc :next (Integer/valueOf (or (:next summary) 0)))
         (dissoc :totalMatched)
         (dissoc :totalReturned)
-        (assoc :end (not (> (Integer/parseInt (:next summary)) 0)))
+        (assoc :end (not (> (Integer/valueOf (or (:next summary) 0)) 0)))
         )
     ))
 
@@ -127,6 +128,8 @@
   ([url opts]
    (let [res (http/post url {:body (make-xml opts) :headers {"Content-Type" "application/xml"}})
          xml (parse (java.io.StringReader. (:body res)))]
-     {:summary (get-summary xml) :records (get-records xml)}
+     (if (not (empty? (filter #(= :error (:tag %)) (:content xml ))))
+       {:errors (map #(:content (first (:content %))) (filter #(= :diagnostics (:tag %)) (:content xml)))}
+       {:summary (get-summary xml) :records (get-records xml)})
      )))
 
