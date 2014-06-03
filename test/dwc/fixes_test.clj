@@ -48,8 +48,8 @@
       => {:occurrenceID "123" :id "123"}
   (-fix-> [{:id "123"} {:id "321"}])
       => [{:occurrenceID "123" :id "123"} {:occurrenceID "321" :id "321"}]
-  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
-      => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
+  (-fix-> {:GlobalUniqueIdentifier 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
+      => {:occurrenceID "123" :globalUniqueIdentifier "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
   (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :RecordNumber "" :day 10 :Month "11"})
       => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20 :day "10" :month "11"}
   )
