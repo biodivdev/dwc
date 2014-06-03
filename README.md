@@ -1,9 +1,9 @@
 # dwc
 
-This is a simple clojure/java library for accessing and reading DwC-A, TAPIR and DIGIR data sources, for occurrences and checklists.
+This is a simple clojure/java library for writing, accessing and reading occurrences and checklists.
 
 Current features:
-- Reading and streaming from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR
+- Reading and streaming from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR, GBIF
 - Writing to: JSON, GEOJSON
 - Search, Filters and pagging on Tapir and Digir
 - Validate records
@@ -20,7 +20,7 @@ Missing features:
 
 Include in your project.clj
 
-    [dwc "0.0.6"]
+    [dwc "0.0.16"]
 
 ### DwC-A
 
@@ -102,6 +102,14 @@ Include in your project.clj
 
     (-fix-> record)
     (comment "apply all fixes, in single or vector of records")
+
+Current fixes:
+- normalize keys: ScientificName -> scientificName
+- decimal data into double values
+- empty fields get removed
+- generade occurrenceID from: id, globalUniqueIdentifier, instutition+catalog+number or generate a unique uud
+- transform latitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
+- transform verbatimLatitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
 
 #### Validation
 
