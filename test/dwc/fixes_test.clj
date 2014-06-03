@@ -22,6 +22,8 @@
     => {:occurrenceID "123" :id "321"}
   (fix-id {:id "321"})
     => {:occurrenceID "321" :id "321"}
+  (fix-id {:globalUniqueIdentifier "321"})
+    => {:occurrenceID "321" :globalUniqueIdentifier "321"}
   (fix-id {:institutionCode "inst" :collectionCode "col" :catalogNumber "num"} )
     => {:institutionCode "inst" :collectionCode "col" :catalogNumber "num" :occurrenceID "urn:occurrence:inst:col:num"}
   )
@@ -37,14 +39,18 @@
   (fix-strings {:id 123 :recordNumber nil}) 
     => {:id "123"})
 
+(fact "Fix keys"
+  (fix-keys {:Id "123" :RecordNumber "321"})
+    => {:id "123" :recordNumber "321"})
+
 (fact "apply many fixes"
   (-fix-> {:id "123"})
       => {:occurrenceID "123" :id "123"}
-  (-fix-> [ {:id "123"} {:id "321"}])
+  (-fix-> [{:id "123"} {:id "321"}])
       => [{:occurrenceID "123" :id "123"} {:occurrenceID "321" :id "321"}]
   (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
       => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
-  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber "" :day 10 :month "11"})
+  (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :RecordNumber "" :day 10 :Month "11"})
       => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20 :day "10" :month "11"}
   )
 

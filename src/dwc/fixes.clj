@@ -71,14 +71,32 @@
   [occ] 
    (if-not (nil? (:occurrenceID occ)) occ
      (if-not (nil? (:id occ)) (assoc occ :occurrenceID (:id occ))
-       (if (and (not (nil? (:institutionCode occ)))
-                (not (nil? (:collectionCode occ)))
-                (not (nil? (:catalogNumber occ))) )
-          (assoc occ :occurrenceID (str "urn:occurrence:" 
-                                        (:institutionCode occ) ":" 
-                                        (:collectionCode occ) ":"
-                                        (:catalogNumber occ)))
-         (assoc occ :occurrenceID (str "urn:occurrence:" (java.util.UUID/randomUUID)))))))
+       (if-not (nil? (:globalUniqueIdentifier occ)) (assoc occ :occurrenceID (:globalUniqueIdentifier occ))
+         (if (and (not (nil? (:institutionCode occ)))
+                  (not (nil? (:collectionCode occ)))
+                  (not (nil? (:catalogNumber occ))) )
+            (assoc occ :occurrenceID (str "urn:occurrence:" 
+                                          (:institutionCode occ) ":" 
+                                          (:collectionCode occ) ":"
+                                          (:catalogNumber occ)))
+           (assoc occ :occurrenceID (str "urn:occurrence:" (java.util.UUID/randomUUID))))))))
+
+(defn proper-case
+  ""
+  [k]
+  (let [a (name k)]
+    (keyword
+      (apply str
+        (.toLowerCase (str (first a)))
+         (rest a)))))
+
+(defn fix-keys
+  "" 
+  [occ] 
+   (reduce merge
+     (map
+      (fn [kv] (hash-map (proper-case (key kv)) (val kv)))
+        occ)))
 
 (defn -fix->
   ""
@@ -86,6 +104,7 @@
    (if (vector? data) 
       (map -fix-> data)
       (-> data
+          fix-keys
           fix-strings
           fix-empties
           fix-id
