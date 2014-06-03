@@ -17,6 +17,24 @@
              (= "S" (nth coord 3)))
          -1 1))))
 
+(defn fix-verbatim-coords
+  ""
+  [occ] 
+   (let [lat (:verbatimLatitude occ)
+         lng (:verbatimLongitude occ)
+         decLat (:decimalLatitude occ)
+         decLng (:decimalLongitude occ)]
+     (if (and (not (nil? decLat)) (not (nil? decLng)))
+       occ
+       (if (and (not (nil? lat)) (not (nil? lng)))
+         (if (not (nil? (re-matches #"[0-9]+\.[0-9]+" lat)))
+           (assoc occ :decimalLatitude lat :decimalLongitude lng)
+           (assoc occ :latitude lat :longitude lng)
+           )
+         occ)
+       )
+   ))
+
 (defn fix-coords
   ""
   [occ] 
@@ -110,5 +128,6 @@
           fix-id
           fix-decimal-lat
           fix-decimal-long
+          fix-verbatim-coords
           fix-coords)))
 

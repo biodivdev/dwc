@@ -15,7 +15,16 @@
   (fix-coords {:latitude "38d 53 55N"})
       => {:latitude "38d 53 55N" }
   (fix-coords {:decimalLatitude 38.89861297607422 :decimalLongitude -77.03778076171875})
-      => {:decimalLatitude 38.89861297607422 :decimalLongitude -77.03778076171875})
+      => {:decimalLatitude 38.89861297607422 :decimalLongitude -77.03778076171875}
+  (fix-verbatim-coords {:verbatimLatitude "10.10" :verbatimLongitude "20.20"})
+      => {:verbatimLatitude "10.10" :verbatimLongitude "20.20"
+          :decimalLatitude "10.10" :decimalLongitude "20.20"}
+  (fix-coords
+    (fix-verbatim-coords {:verbatimLatitude "38d 53 55N" :verbatimLongitude "77 2' 16'' W"}))
+      => {:verbatimLatitude "38d 53 55N" :verbatimLongitude "77 2' 16'' W"
+          :latitude "38d 53 55N" :longitude "77 2' 16'' W"
+          :decimalLatitude 38.89861297607422 :decimalLongitude -77.03778076171875}
+      )
 
 (fact "Fixes occurrenceID"
   (fix-id {:occurrenceID "123" :id "321"})
