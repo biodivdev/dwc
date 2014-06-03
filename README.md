@@ -110,6 +110,7 @@ Current fixes:
 - generade occurrenceID from: id, globalUniqueIdentifier, instutition+catalog+number or generate a unique uud
 - transform latitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
 - transform verbatimLatitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
+- remove non std fields
 
 #### Validation
 

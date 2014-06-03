@@ -1,4 +1,8 @@
-(ns dwc.fixes)
+(ns dwc.fixes
+  (:use [clojure.data.json :only [read-str write-str]] ))
+
+(def dwc-schema
+  (read-str (slurp (clojure.java.io/resource "schema.json") ) :key-fn keyword))
 
 (defn coord2decimal
   ""
@@ -116,6 +120,14 @@
       (fn [kv] (hash-map (proper-case (key kv)) (val kv)))
         occ)))
 
+(defn fix-fields
+  ""
+  [occ] 
+   (let [ok-fields (map key (:properties dwc-schema))]
+     (fix-empties
+       (reduce merge 
+           (map (fn [k] (hash-map k (k occ))) ok-fields)))))
+
 (defn -fix->
   ""
   [data] 
@@ -124,7 +136,7 @@
       (-> data
           fix-keys
           fix-strings
-          fix-empties
+          fix-fields
           fix-id
           fix-decimal-lat
           fix-decimal-long

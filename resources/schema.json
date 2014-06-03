@@ -4,6 +4,9 @@
     "required":["occurrenceID"],
     "properties": {
 
+        "id": {"type":"string"}
+        "globalUniqueIdentifier": {"type":"string"}
+
         "type":{"type":"string"}
         "modified":{"type":"string"}
         "language":{"type":"string"}

@@ -51,6 +51,9 @@
 (fact "Fix keys"
   (fix-keys {:Id "123" :RecordNumber "321"})
     => {:id "123" :recordNumber "321"})
+(fact "Only allowed fields"
+   (fix-fields {:recordNumber "23" :foo "bar"})
+      => {:recordNumber "23"})
 
 (fact "apply many fixes"
   (-fix-> {:id "123"})
