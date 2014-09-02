@@ -50,11 +50,13 @@
   ""
   [ occs ]
    (let [occs (distinct occs)
-         points (map #(point (c (:decimalLatitude %) (:decimalLongitude %))) occs) ]
-     (if (> (count points) 3 )
-       (/ (area-in-meters (convex-hull points)) 1000)
-       (/ (area-in-meters (union (map #(buffer-in-meters % 10000) points))) 1000)
-       )))
+         points (map #(point (c (:decimalLatitude %) (:decimalLongitude %))) occs) 
+         poli (if (> (count points) 3) 
+                (convex-hull points)
+                (union (map #(buffer-in-meters % 10000) points)))]
+     {:polygon poli
+      :area (/ (area-in-meters poli) 1000)}
+       ))
 
 (defn make-grid
   ""
@@ -88,5 +90,21 @@
        (for [cell grid point points]
          (if (within? cell point)
            (conj! cells cell))))
-     (* 1000 (* 4 (count (distinct (persistent! cells)))))))
+     (let [result (distinct (persistent! cells))]
+       {:area (* 1000 (* 4 (count result)))
+        :polygon 
+        (union 
+          (mapv
+            #(geom/polygon
+               (geom/linear-ring
+                     [
+                     (c (aget % 0) (aget % 2))
+                     (c (aget % 0) (aget % 3)) 
+                     (c (aget % 1) (aget % 3)) 
+                     (c (aget % 1) (aget % 2)) 
+                     (c (aget % 0) (aget % 2)) 
+                     ]
+                     ) nil
+                     ) result))}
+       )))
 
