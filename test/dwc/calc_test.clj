@@ -22,4 +22,5 @@
        o1 {:decimalLatitude -24.12 :decimalLongitude -21.22}
        o2 {:decimalLatitude -24.1200001 :decimalLongitude -21.2200001}]
    (aoo [o0 o1 o2]) => 8
+   (aoo [o0]) => 4
    ))

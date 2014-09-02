@@ -56,31 +56,34 @@
        (area-in-meters (union (map #(buffer-in-meters % 10000) points)))
        )))
 
-(def step 2)
-
-(def grid
- (doall
-  (for [lng (range -7800 -1800 step) lat (range -3400 500 step)]
-    [lat (+ lat step) lng (+ lng step)]
-  )))
+(defn make-grid
+  ""
+  [min-lat max-lat min-lng max-lng]
+  (let [step 2]
+   (doall
+    (for [lng (range (- min-lng step) (+ max-lng step) step) 
+          lat (range (- min-lat step) (+ max-lat step) step)]
+      (int-array
+        [lat (+ lat step) lng (+ lng step)])))))
 
 (defn within?
   [cell point]
   (let [lat (first point)
         lng (last point)]
     (and 
-      (>= lat (get cell 0))
-      (< lat (get cell 1))
-      (>= lng (get cell 2))
-      (< lng (get cell 3))
+      (>= lat (aget cell 0))
+      (< lat (aget cell 1))
+      (>= lng (aget cell 2))
+      (< lng (aget cell 3))
       )))
 
 (defn aoo
   ""
   [ occs ]
-   (let [occs (distinct occs)
+   (let [occs   (distinct occs)
          points (map #(vector (int (* (:decimalLatitude %) 100))  (int (* (:decimalLongitude %) 100))) occs)
-         cells (transient [])]
+         grid   (make-grid (apply min (map first points)) (apply max (map first points)) (apply min (map last points)) (apply max (map last points)))
+         cells  (transient [])]
      (dorun
        (for [cell grid point points]
          (if (within? cell point)
