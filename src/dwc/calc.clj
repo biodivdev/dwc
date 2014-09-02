@@ -88,5 +88,5 @@
        (for [cell grid point points]
          (if (within? cell point)
            (conj! cells cell))))
-     (* 4 (count (distinct (persistent! cells))))))
+     (* 1000 (* 4 (count (distinct (persistent! cells)))))))
 

@@ -5,7 +5,9 @@
 (fact "Calculate EOO buffers"
  (let [o0 {:decimalLatitude 10.10 :decimalLongitude 20.20}
        o1 {:decimalLatitude 14.10 :decimalLongitude 21.21}
-       o2 {:decimalLatitude 14.10 :decimalLongitude 21.21}]
+       o2 {:decimalLatitude 14.10 :decimalLongitude 21.21}
+       o3 {:decimalLatitude -15.15 :decimalLongitude -35.35}]
+   (eoo [ o3  ]) => (roughly 2.9983E8)
    (eoo [ o0 o1 ]) => (roughly 6.242E8)
    (eoo [ o0 o1 o2 ]) => (eoo [ o0 o1 ])
    ))
@@ -21,6 +23,6 @@
  (let [o0 {:decimalLatitude -10.10 :decimalLongitude -20.20}
        o1 {:decimalLatitude -24.12 :decimalLongitude -21.22}
        o2 {:decimalLatitude -24.1200001 :decimalLongitude -21.2200001}]
-   (aoo [o0 o1 o2]) => 8
-   (aoo [o0]) => 4
+   (aoo [o0 o1 o2]) => 8000
+   (aoo [o0]) => 4000
    ))
