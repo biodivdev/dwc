@@ -53,13 +53,11 @@
 
   (fact "Capable of capabilities"
      (let [caps (map key (:fields (get-capabilities test-url)) )]
-       (first caps) => "StateProvince"
-       (last caps) => "InfraspecificEpithet"))
+       (first caps) => "Order"
+       (last caps) => "InstitutionCode"))
   
   (fact "Can read a tapir source"
     (let [occurrences (read-tapir test-url {:fields ["ScientificName" "InstitutionCode"]})]
-      (:scientificName (first (:records occurrences)))
-         => "Eucalyptus"
       (:institutionCode (first (:records occurrences)))
          => "JBRJ"
       (:end (:summary occurrences)) 

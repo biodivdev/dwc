@@ -2,7 +2,7 @@
   (:use dwc.archive)
   (:use midje.sweet))
 
-(def test-url "http://data.canadensys.net/ipt/archive.do?r=win-vascular-specimens")
+(def test-url "http://ipt.jbrj.gov.br/ipt/archive.do?r=redlist_2013_occs")
 (def test-url2 "http://ipt.jbrj.gov.br/ipt/archive.do?r=redlist_2013_taxons")
 
 (fact "Can find core tag, config of csv and fields."
@@ -14,13 +14,13 @@
     (:tag core) => :core
     file => "occurrence.txt"
     config => {:separator \tab :ignoreFirst true :quote \u0000}
-    (first fields) => {:index 1  :name :type}
-    (last  fields) => {:index 47 :name :nomenclaturalCode}))
+    (first fields) => {:index 1  :name :language}
+    (last  fields) => {:index 23 :name :taxonomicStatus}))
 
 (fact "Can read DwC-A"
  (let [occurrences (read-archive test-url)]
-   (:scientificName (first occurrences)) => "Polypodium sibiricum Sipl."
-   (:recordedBy (last occurrences)) => "D. Punter"))
+   (:scientificName (first occurrences)) => "Justicia scheidweileri"
+   (:recordedBy (last occurrences)) => "Lindeman, J.C."))
 
 (fact "Can read DwC-A taxons"
   (let [taxons (read-archive test-url2)]

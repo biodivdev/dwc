@@ -8,6 +8,7 @@ Current features:
 - Search, Filters and pagging on Tapir and Digir
 - Validate records
 - Apply common fixes
+- EOO calculation
 
 Missing features:
 - Java Interface
@@ -20,7 +21,7 @@ Missing features:
 
 Include in your project.clj
 
-    [dwc "0.0.16"]
+    [dwc "0.0.19"]
 
 ### DwC-A
 
