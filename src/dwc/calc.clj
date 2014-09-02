@@ -52,8 +52,8 @@
    (let [occs (distinct occs)
          points (map #(point (c (:decimalLatitude %) (:decimalLongitude %))) occs) ]
      (if (> (count points) 3 )
-       (area-in-meters (convex-hull points))
-       (area-in-meters (union (map #(buffer-in-meters % 10000) points)))
+       (/ (area-in-meters (convex-hull points)) 1000)
+       (/ (area-in-meters (union (map #(buffer-in-meters % 10000) points))) 1000)
        )))
 
 (defn make-grid
