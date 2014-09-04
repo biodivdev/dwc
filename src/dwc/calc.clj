@@ -99,11 +99,11 @@
                 (mapv
                   #(geom/polygon
                      (geom/linear-ring
-                       [ (c (aget % 0) (aget % 2))
-                         (c (aget % 0) (aget % 3)) 
-                         (c (aget % 1) (aget % 3)) 
-                         (c (aget % 1) (aget % 2)) 
-                         (c (aget % 0) (aget % 2)) ]
+                       [ (c (/ (aget % 0) 100) (/ (aget % 2) 100))
+                         (c (/ (aget % 0) 100) (/ (aget % 3) 100)) 
+                         (c (/ (aget % 1) 100) (/ (aget % 3) 100)) 
+                         (c (/ (aget % 1) 100) (/ (aget % 2) 100)) 
+                         (c (/ (aget % 0) 100) (/ (aget % 2) 100)) ]
                        ) nil) 
                   result))))
         }
