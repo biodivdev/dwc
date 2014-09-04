@@ -54,7 +54,7 @@
          poli (if (> (count points) 3) 
                 (convex-hull points)
                 (union (map #(buffer-in-meters % 10000) points)))]
-     {:polygon poli
+     {:polygon (read-str (io/write-geojson poli))
       :area (/ (area-in-meters poli) 1000)}
        ))
 
@@ -93,18 +93,19 @@
      (let [result (distinct (persistent! cells))]
        {:area (* 1000 (* 4 (count result)))
         :polygon 
-        (union 
-          (mapv
-            #(geom/polygon
-               (geom/linear-ring
-                     [
-                     (c (aget % 0) (aget % 2))
-                     (c (aget % 0) (aget % 3)) 
-                     (c (aget % 1) (aget % 3)) 
-                     (c (aget % 1) (aget % 2)) 
-                     (c (aget % 0) (aget % 2)) 
-                     ]
-                     ) nil
-                     ) result))}
+          (read-str
+            (io/write-geojson
+              (union 
+                (mapv
+                  #(geom/polygon
+                     (geom/linear-ring
+                       [ (c (aget % 0) (aget % 2))
+                         (c (aget % 0) (aget % 3)) 
+                         (c (aget % 1) (aget % 3)) 
+                         (c (aget % 1) (aget % 2)) 
+                         (c (aget % 0) (aget % 2)) ]
+                       ) nil) 
+                  result))))
+        }
        )))
 
