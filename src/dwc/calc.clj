@@ -17,14 +17,16 @@
 
 (def point geom/point)
 (def c geom/c)
+(def area geom/area)
+(def utm transform/utmzone)
 
 (defn area-in-meters
   ""
   ([polygon] (area-in-meters polygon "EPSG:4326"))
   ([polygon crs] 
-   (geom/area
+   (area
      (transform/reproject
-       polygon crs "EPSG:23032"))))
+       polygon crs (utm polygon)))))
 
 (defn convex-hull
   ""
@@ -38,8 +40,8 @@
   ([point meters crs]
     (transform/reproject 
       (analysis/buffer
-        (transform/reproject point crs "EPSG:23032")
-        meters) "EPSG:23032" crs)))
+        (transform/reproject point crs (utm point))
+        meters) (utm point) crs)))
 
 (defn union
   ""
@@ -50,12 +52,12 @@
   ""
   [ occs ]
    (let [occs (distinct occs)
-         points (map #(point (c (:decimalLatitude %) (:decimalLongitude %))) occs) 
-         poli (if (> (count points) 3) 
+         points (map #(point (c (:decimalLongitude %) (:decimalLatitude %))) occs) 
+         poli (if (>= (count points) 3) 
                 (convex-hull points)
                 (union (map #(buffer-in-meters % 10000) points)))]
      {:polygon (read-str (io/write-geojson poli))
-      :area (/ (area-in-meters poli) 1000)}
+      :area    (* (area poli) 10000)}
        ))
 
 (defn make-grid
