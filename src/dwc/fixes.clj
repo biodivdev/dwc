@@ -128,6 +128,17 @@
        (reduce merge 
            (map (fn [k] (hash-map k (k occ))) ok-fields)))))
 
+(defn rm-dot-zero
+  ""
+  [kv]
+  {(key kv) (clojure.string/replace (val kv) #"\.0$" "") })
+
+(defn fix-dot-zero
+  ""
+  [occ]
+   (reduce merge
+    (map rm-dot-zero occ)))
+
 (defn -fix->
   ""
   [data] 
@@ -136,6 +147,7 @@
       (-> data
           fix-keys
           fix-strings
+          fix-dot-zero
           fix-fields
           fix-id
           fix-decimal-lat
