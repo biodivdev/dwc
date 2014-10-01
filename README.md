@@ -1,10 +1,10 @@
 # dwc
 
-This is a simple clojure/java library for writing, accessing and reading occurrences and checklists.
+This is a simple clojure/java library for writing, accessing and reading occurrences.
 
 Current features:
 - Reading and streaming from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR, GBIF
-- Writing to: JSON, GEOJSON
+- Writing to: JSON, GEOJSON, XLSX, CSV
 - Search, Filters and pagging on Tapir and Digir
 - Validate records
 - AOO/EOO calculation
@@ -51,6 +51,9 @@ Include in your project.clj
       (function [record]
         (comment "reads the csv as a stream")))
 
+    (spit "dwc.csv"
+        (write-csv [{:scientificName "Aphelandra longiflora" } {:scientificName "Aphelandra espirito-santensis"}]))
+
 #### JSON & GeoJSON
 
     (use 'dwc.json) 
@@ -70,8 +73,8 @@ Include in your project.clj
         (comment "reads the geojson as a stream")))
 
     (comment "Support writing")
-    (spit "occs.gjson" (write-geojson {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"}))
-    (spit "occs.json" (write-json {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"}))
+    (spit "occs.gjson" (write-geojson [ {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"} ]))
+    (spit "occs.json" (write-json [ {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"} ]))
 
 #### XLSX
 
@@ -82,6 +85,11 @@ Include in your project.clj
     (read-xlsx-stream "path-to.xlsx"
       (function [record]
         (comment "reads the xlsx as a stream")))
+
+    (use 'clojure.java.io)
+    (copy
+        (as-file (write-csv [{:scientificName "Aphelandra longiflora" } {:scientificName "Aphelandra espirito-santensis"}]))
+        (as-file "./dwc.xlsx"))
 
 #### Tapir
 
@@ -134,7 +142,5 @@ Soon
 
 ## License
 
-Copyright © 2013 Centro Nacional de Conservação da Flora, Instituto de Pesquisa Jardim Botânico do Rio de Janeiro.
-
-Distributed under the Apache License 2.0.
+MIT
 
