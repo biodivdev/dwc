@@ -30,7 +30,7 @@
 
 (defn write-xlsx
   [occurrences]
-  (let [path (str (System/getProperty "java.io.tmpdir") "/" (hash occurrences) ".xlsx")
+  (let [path (str (System/getProperty "java.io.tmpdir") "/dwc" (hash occurrences) ".xlsx")
         fields (mapv name (mapv key (reduce merge occurrences)))]
     (save-workbook! path 
      (create-workbook "occurrences"
