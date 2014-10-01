@@ -28,4 +28,19 @@
         (swap! occs conj occ)))
     (deref occs)))
 
+(defn write-xlsx
+  [occurrences]
+  (let [path (str (System/getProperty "java.io.tmpdir") "/" (hash occurrences) ".xlsx")
+        fields (mapv name (mapv key (reduce merge occurrences)))]
+    (save-workbook! path 
+     (create-workbook "occurrences"
+      (vec
+        (concat [fields]
+       (vec
+        (for [occ occurrences]
+         (vec
+          (for [f fields]
+           (get occ (keyword f))))))))))
+    path
+    ))
 
