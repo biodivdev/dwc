@@ -7,8 +7,16 @@ Current features:
 - Writing to: JSON, GEOJSON
 - Search, Filters and pagging on Tapir and Digir
 - Validate records
+- AOO/EOO calculation
 - Apply common fixes
-- EOO calculation
+-- verbatimCoordinates vs decimalLatitude/decimalLongitude
+-- fields and keys case (DecimalLatitude vs decimalLatitude)
+-- empty and null values
+-- occurrenceID generation, if not exists, as one of:
+--- id field
+--- globalUniqueIdentifier field
+--- institutionCode:collectionCode:catalogNumber
+--- randomUUID
 
 Missing features:
 - Java Interface
