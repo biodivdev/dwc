@@ -12,6 +12,7 @@
                  [diogok/cljts "0.4.3"]
                  [clj-http "0.7.6"]]
   :jvm-opts ["-Xmx2G" "-Xms2G" "-server"] 
+  :repositories [["clojars" {:sign-releases false}]]
   :profiles {:uberjar {:aot :all}
              :jar {:aot :all}
              :dev {:dependencies [[midje "1.6.3"]]
