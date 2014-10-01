@@ -24,3 +24,18 @@
         (swap! occs conj occ)))
     (deref occs)))
 
+(defn write-csv
+  "Return CSV of occurrences"
+  [occurrences] 
+   (let [fields (map name (map key (reduce merge occurrences)))]
+     (apply str 
+      (concat
+        (interpose ";" (map #(str "\"" % "\"") fields))
+        (list "\n")
+        (flatten
+          (interpose "\n"
+           (for [occ occurrences]
+             (interpose ";"
+                 (for [f fields]
+                   (str "\"" (get occ (keyword f)) "\"" ))))))))))
+
