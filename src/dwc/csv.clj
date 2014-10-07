@@ -6,7 +6,7 @@
   "Read the csv as a stream calling fun at each line"
   [url fun]
   (with-open [in-file (io/reader url)]
-    (let [csv (csv/read-csv in-file :separator \, :quote \")
+    (let [csv (csv/read-csv in-file :separator \; :quote \")
           head (first csv)
           content (rest csv)]
       (doseq [line content]

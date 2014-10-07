@@ -41,7 +41,7 @@ Include in your project.clj
      (fn [record]
       (comment "reads the archive as a stream")))
 
-#### CSV, using ','(comma) as  separator and '"'(double-quotes) as quote
+#### CSV, using ';'(column) as  separator and '"'(double-quotes) as quote
 
     (use 'dwc.csv) 
     (let [records (read-csv "path-to.csv")]
