@@ -165,7 +165,8 @@
   "Read the summary and records from a URL tapir"
   ([url] (read-tapir url {}))
   ([url opts]
-   (let [res (http/post url {:body (make-xml url opts) :headers {"Content-Type" "application/xml"}})
+   (let [req (make-xml url opts)
+         res (http/post url {:body req :headers {"Content-Type" "application/xml"}})
          xml (parse (java.io.StringReader. (:body res)))]
      (if (not (empty? (filter #(= :error (:tag %)) (:content xml))))
        {:errors (map #(:content (first (:content %))) (filter #(= :diagnostics (:tag %)) (:content xml)))}

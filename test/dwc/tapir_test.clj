@@ -73,3 +73,9 @@
          => "Trichanthera gigantea Kunth")
         )
 
+  (fact "One more read"
+    (let [occurrences (read-tapir "http://tapir.cria.org.br/tapirlink/tapir.php/specieslink"
+                                  {:filters {"ScientificName" "Discocactus pseudoinsignis"} :fields [ "ScientificName"]})]
+      (count (:records occurrences )) => (:total (:summary occurrences))
+      )) 
+
