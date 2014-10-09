@@ -5,6 +5,7 @@
   (:require [cljts.relation :as relation])
   (:require [cljts.geom :as geom])
   (:require [cljts.io :as io])
+  (:require [clojure.core.reducers :as r])
   (:import [com.vividsolutions.jts.geom
             GeometryFactory
             PrecisionModel
@@ -62,13 +63,13 @@
 
 (defn make-grid
   ""
-  [min-lat max-lat min-lng max-lng]
-  (let [step 2]
-   (doall
-    (for [lng (range (- min-lng step) (+ max-lng step) step) 
-          lat (range (- min-lat step) (+ max-lat step) step)]
-      (int-array
-        [lat (+ lat step) lng (+ lng step)])))))
+  ([min-lat max-lat min-lng max-lng] (make-grid min-lat max-lat min-lng max-lng 2))
+  ([min-lat max-lat min-lng max-lng step]
+     (doall
+      (for [lng (range (- min-lng step) (+ max-lng step) step) 
+            lat (range (- min-lat step) (+ max-lat step) step)]
+        (int-array
+          [lat (+ lat step) lng (+ lng step)])))))
 
 (defn within?
   [cell point]
@@ -81,18 +82,42 @@
       (< lng (aget cell 3))
       )))
 
+(defn grid-of-points
+  [points step] 
+   (make-grid (apply min (map first points))
+              (apply max (map first points))
+              (apply min (map last points))
+              (apply max (map last points)) 
+              step))
+
+(defn filter-cells-0
+  [grid points]
+   (into [] 
+    (r/filter 
+      (fn [g]
+        (some (partial within? g) points)) grid)))
+
+(defn filter-cells-1
+ [grid points]
+  (let [cells (transient [])]
+    (dorun
+      (for [p points cell grid]
+        (if (within? cell p)
+          (conj! cells cell))))
+    (distinct (persistent! cells))))
+
+(def filter-cells filter-cells-0)
+
 (defn aoo
   ""
   [ occs ]
-   (let [occs   (distinct occs)
-         points (map #(vector (int (* (:decimalLatitude %) 100))  (int (* (:decimalLongitude %) 100))) occs)
-         grid   (make-grid (apply min (map first points)) (apply max (map first points)) (apply min (map last points)) (apply max (map last points)))
-         cells  (transient [])]
-     (dorun
-       (for [cell grid point points]
-         (if (within? cell point)
-           (conj! cells cell))))
-     (let [result (distinct (persistent! cells))]
+   (let [occs     (distinct occs)
+         points   (map #(vector (int (* (:decimalLatitude %) 100))  (int (* (:decimalLongitude %) 100))) occs)
+         grid-20  (grid-of-points points 20)
+         cells-20 (filter-cells grid-20 points)
+         grid-2   (distinct (flatten (map #(apply make-grid %) cells-20)))
+         cells-2  (filter-cells grid-2 points)
+         result   cells-2]
        {:area (* 1000 (* 4 (count result)))
         :polygon 
           (read-str
@@ -108,6 +133,5 @@
                          (c (/ (aget % 0) 100) (/ (aget % 2) 100)) ]
                        ) nil) 
                   result))))
-        }
-       )))
+        }))
 

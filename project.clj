@@ -1,4 +1,4 @@
-(defproject dwc "0.0.31"
+(defproject dwc "0.0.32"
   :description "Simple (and rather limited) reader/consumer for DwC-A, DIGIR, TAPIR, CSV and xlsx resources, local or online."
   :url "http://github.com/CNCFlora/dwc"
   :license {:name "MIT"}
@@ -10,7 +10,7 @@
                  [bigml/closchema "0.5"]
                  [diogok/cljts "0.4.3"]
                  [clj-http "0.7.6"]]
-  :jvm-opts ["-Xmx2G" "-Xms2G" "-server"] 
+  :jvm-opts ["-Xmx4G" "-server"] 
   :repositories [["clojars" {:sign-releases false}]]
   :profiles {:uberjar {:aot :all}
              :jar {:aot :all}
