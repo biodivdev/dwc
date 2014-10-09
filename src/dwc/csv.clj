@@ -24,10 +24,16 @@
         (swap! occs conj occ)))
     (deref occs)))
 
+(def all-fields 
+  (->
+    (map second (re-seq #"\"([a-zA-Z]+)\"\s?:" (slurp (clojure.java.io/resource "schema.json"))))
+      rest rest rest rest))
+
 (defn write-csv
   "Return CSV of occurrences"
   [occurrences] 
-   (let [fields (map name (map key (reduce merge occurrences)))]
+   (let [in-fields  (mapv name (mapv key (reduce merge occurrences)))
+         fields  (filter (partial contains? (set in-fields)) all-fields)]
      (apply str 
       (concat
         (interpose ";" (map #(str "\"" % "\"") fields))

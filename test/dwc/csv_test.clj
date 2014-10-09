@@ -9,5 +9,9 @@
                            {:scientificName "Vicia faba" :latitude "30.3" :longitude "8.9" :locality ""}])
 
 (fact "Can write csv"
-  (write-csv [{:scientificName "Foo" :locality "Riverrun" } {:scientificName "Bar" :id 1}])
-   => "\"id\";\"locality\";\"scientificName\"\n\"\";\"Riverrun\";\"Foo\"\n\"1\";\"\";\"Bar\"")
+  (write-csv [{:scientificName "Foo" :locality "Riverrun" }
+              {:scientificName "Bar" :id 1 :habitat "test"  :decimalLongitude 20.20 :decimalLatitude 10.10}])
+   => (str "\"id\";\"habitat\";\"locality\";\"decimalLatitude\";\"decimalLongitude\";\"scientificName\"\n"
+           "\"\";\"\";\"Riverrun\";\"\";\"\";\"Foo\"\n"
+           "\"1\";\"test\";\"\";\"10.1\";\"20.2\";\"Bar\"")
+      )
