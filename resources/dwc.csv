@@ -1,3 +1,3 @@
-scientificName,locality,latitude,longitude
-Aphelandra longiflora,"riverrun",10.10,20.20
-Vicia faba,,30.3,8.9,
+scientificName;locality;latitude;longitude
+Aphelandra longiflora;"riverrun";10.10;20.20
+Vicia faba;;30.3;8.9;
