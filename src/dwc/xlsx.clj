@@ -1,4 +1,5 @@
 (ns dwc.xlsx
+  (:use dwc.validation)
   (:use dk.ative.docjure.spreadsheet))
 
 (defn col
@@ -28,17 +29,11 @@
         (swap! occs conj occ)))
     (deref occs)))
 
-(def all-fields 
-  (->
-    (map second (re-seq #"\"([a-zA-Z]+)\"\s?:" (slurp (clojure.java.io/resource "schema.json"))))
-      rest rest rest rest))
-
 (defn write-xlsx
   [occurrences]
   (let [path (str (System/getProperty "java.io.tmpdir") "/dwc" (hash occurrences) ".xlsx")
         in-fields (mapv name (mapv key (reduce merge occurrences)))
         fields  (filter (partial contains? (set in-fields)) all-fields)]
-    (println fields)
     (save-workbook! path 
      (create-workbook "occurrences"
       (vec

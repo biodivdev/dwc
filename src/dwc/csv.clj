@@ -1,4 +1,5 @@
 (ns dwc.csv
+  (:use dwc.validation)
   (:require [clojure.java.io :as io])
   (:require [clojure.data.csv :as csv]))
 
@@ -23,11 +24,6 @@
       (fn [occ] 
         (swap! occs conj occ)))
     (deref occs)))
-
-(def all-fields 
-  (->
-    (map second (re-seq #"\"([a-zA-Z]+)\"\s?:" (slurp (clojure.java.io/resource "schema.json"))))
-      rest rest rest rest))
 
 (defn write-csv
   "Return CSV of occurrences"

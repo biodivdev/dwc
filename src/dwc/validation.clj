@@ -7,6 +7,11 @@
 (def dwc-schema
   (read-str (slurp (clojure.java.io/resource "schema.json") ) :key-fn keyword))
 
+(def all-fields 
+  (->
+    (map second (re-seq #"\"([a-zA-Z]+)\"\s?:" (slurp (clojure.java.io/resource "schema.json"))))
+      rest rest rest rest))
+
 (defn validate
   "Validate an occurrence entry"
   [occ] 
