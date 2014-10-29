@@ -29,7 +29,7 @@
   "Return CSV of occurrences"
   [occurrences] 
    (let [in-fields  (mapv name (mapv key (reduce merge occurrences)))
-         fields  (filter (partial contains? (set in-fields)) all-fields)]
+         fields  (filter (partial contains? (set in-fields)) (distinct all-fields ))]
      (apply str 
       (concat
         (interpose ";" (map #(str "\"" % "\"") fields))

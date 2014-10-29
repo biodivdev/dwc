@@ -1,4 +1,4 @@
-(defproject dwc "0.0.34"
+(defproject dwc "0.0.35"
   :description "Simple (and rather limited) reader/consumer for DwC-A, DIGIR, TAPIR, CSV and xlsx resources, local or online."
   :url "http://github.com/CNCFlora/dwc"
   :license {:name "MIT"}

@@ -15,3 +15,14 @@
            "\"\";\"\";\"Riverrun\";\"\";\"\";\"Foo\"\n"
            "\"1\";\"test\";\"\";\"10.1\";\"20.2\";\"Bar\"")
       )
+
+(fact "Write CSV 2"
+  (let [csv (write-csv (dwc.json/read-json "http://cncflora.jbrj.gov.br/floradata/api/v1/occurrences?scientificName=Aphelandra+acrensis"))]
+    csv => (slurp "resources/dwc2.csv")
+    ))
+
+(fact "Write CSV 3"
+  (let [csv (write-csv (dwc.json/read-json "http://cncflora.jbrj.gov.br/floradata/api/v1/occurrences?scientificName=Anisacanthus+trilobus"))]
+    csv => (slurp "resources/dwc3.csv")
+    ))
+
