@@ -139,6 +139,10 @@
    (reduce merge
     (map rm-dot-zero occ)))
 
+(defn fix-naming
+  ""
+  [occ] occ)
+
 (defn -fix->
   ""
   [data] 
@@ -150,6 +154,7 @@
           fix-dot-zero
           fix-fields
           fix-id
+          fix-naming
           fix-decimal-lat
           fix-decimal-long
           fix-verbatim-coords

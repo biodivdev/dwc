@@ -70,3 +70,14 @@
   (fix-dot-zero {:recordNumber "23.0" :foo "129.0.0.1"})
    => {:recordNumber "23" :foo "129.0.0.1"})
 
+(fact "Fix names"
+  (fix-naming {:scientificName "Auranticaria something   var. onthing"})
+   => {:scientificName "Auranticaria something var. onthing"}
+  (fix-naming {:scientificName "Aphelandra longiflora"})
+   => {:scientificName "Aphelandra longiflora"}
+  (fix-naming {:scientificName "Aphelandra longiflora" :scientificNameAuthorship "S.Profice"})
+   => {:scientificName "Aphelandra longiflora S.Profice" :scientificNameWithoutAuthorship "S.Profice" :scientificNameWithoutAuthorship "Aphelandra longiflora"}
+  (fix-naming {:scientificNameWithoutAuthorship "Aphelandra longiflora" :scientificNameAuthorship "S.Profice"})
+   => {:scientificName "Aphelandra longiflora S.Profice" :scientificNameWithoutAuthorship "S.Profice" :scientificNameWithoutAuthorship "Aphelandra longiflora"}
+)
+
