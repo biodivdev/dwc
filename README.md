@@ -7,7 +7,6 @@ Current features:
 - Writing to: JSON, GEOJSON, XLSX, CSV
 - Search, Filters and pagging on Tapir and Digir
 - Validate records
-- AOO/EOO calculation
 - Apply common fixes
 -- verbatimCoordinates vs decimalLatitude/decimalLongitude
 -- fields and keys case (DecimalLatitude vs decimalLatitude)
