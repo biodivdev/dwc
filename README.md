@@ -1,9 +1,9 @@
-# dwc
+# dwc-io
 
 This is a simple clojure/java library for writing, accessing and reading occurrences.
 
 Current features:
-- Reading and streaming from: DwC-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR, GBIF
+- Reading and streaming from: dwc-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR, GBIF
 - Writing to: JSON, GEOJSON, XLSX, CSV
 - Search, Filters and pagging on Tapir and Digir
 - Validate records
@@ -21,7 +21,7 @@ Current features:
 Missing features:
 - Java Interface
 - Finish validation
-- Writing on DwC-A and XLSX 
+- Writing on dwc-A and XLSX 
 
 ## Usage
 
@@ -29,13 +29,13 @@ Missing features:
 
 Include in your project.clj
 
-    [dwc "0.0.32"]
+    [dwc-io "0.0.36"]
 
-### DwC-A
+### dwc-A
 
-    (use 'dwc.archive)
+    (use 'dwc-io.archive)
     (let [records (read-archive "url for dwc-a zip")]
-      (comment "records is a vector of maps, with dwc fields as keywords keys"))
+      (comment "records is a vector of maps, with dwc-io fields as keywords keys"))
 
     (read-archive-stream "url for dwc-a zip" 
      (fn [record]
@@ -43,7 +43,7 @@ Include in your project.clj
 
 #### CSV, using ';'(column) as  separator and '"'(double-quotes) as quote
 
-    (use 'dwc.csv) 
+    (use 'dwc-io.csv) 
     (let [records (read-csv "path-to.csv")]
       (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
@@ -51,12 +51,12 @@ Include in your project.clj
       (function [record]
         (comment "reads the csv as a stream")))
 
-    (spit "dwc.csv"
+    (spit "dwc-io.csv"
         (write-csv [{:scientificName "Aphelandra longiflora" } {:scientificName "Aphelandra espirito-santensis"}]))
 
 #### JSON & GeoJSON
 
-    (use 'dwc.json) 
+    (use 'dwc-io.json) 
     (let [records (read-json "path-to.json")]
       (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
@@ -64,7 +64,7 @@ Include in your project.clj
       (function [record]
         (comment "reads the json as a stream")))
 
-    (use 'dwc.geojson) 
+    (use 'dwc-io.geojson) 
     (let [records (read-geojson "path-to.xlsx")]
       (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
@@ -78,7 +78,7 @@ Include in your project.clj
 
 #### XLSX
 
-    (use 'dwc.xlsx) 
+    (use 'dwc-io.xlsx) 
     (let [records (read-xlsx "path-to.xlsx")]
       (comment "records is a vector of maps, with dwc fields as keywords keys")))
 
@@ -93,7 +93,7 @@ Include in your project.clj
 
 #### Tapir
 
-    (use 'dwc.tapir)
+    (use 'dwc-io.tapir)
     (let [opts {:fields ["ScientificName"] :filters {"Family" "BROMELIACEAE"} :start 10 :limit 30}
           records (read-tapir "url" opts)]
      (comment "all options are optional, any combination is valid")
@@ -101,7 +101,7 @@ Include in your project.clj
 
 #### Digir
 
-    (use 'dwc.digir)
+    (use 'dwc-io.digir)
     (let [opts {:filters {"Family" "BROMELIACEAE"} :start 10 :limit 30}
           records (read-digir "url" opts)]
      (comment "all options are optional, any combination is valid")
@@ -109,7 +109,7 @@ Include in your project.clj
 
 #### Applying fixes
 
-    (use 'dwc.fixes)
+    (use 'dwc-io.fixes)
 
     (fix-id record)
     (comment "tries to generate an recordID, if not present, based on institution+collection+number")
@@ -131,7 +131,7 @@ Current fixes:
 
 #### Validation
 
-    (use 'dwc.validation)
+    (use 'dwc-io.validation)
 
     (validate record)
     (comment "tries to validate record based on information of http://rs.tdwg.org/dwc/terms/")
