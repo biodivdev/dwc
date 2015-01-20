@@ -11,6 +11,7 @@ Current features:
 -- verbatimCoordinates vs decimalLatitude/decimalLongitude
 -- fields and keys case (DecimalLatitude vs decimalLatitude)
 -- empty and null values
+-- naming fields (scientifcName, scientificNameWithoutAuthorship, scientificNameAuthorship)
 -- occurrenceID generation, if not exists, as one of:
 --- id field
 --- globalUniqueIdentifier field
@@ -20,7 +21,7 @@ Current features:
 Missing features:
 - Java Interface
 - Finish validation
-- Writing on DwC-A, XLSX and CSV
+- Writing on DwC-A and XLSX 
 
 ## Usage
 
