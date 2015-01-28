@@ -103,21 +103,25 @@
                                           (:catalogNumber occ)))
            (assoc occ :occurrenceID (str "urn:occurrence:" (java.util.UUID/randomUUID))))))))
 
-(defn proper-case
+(defn proper-field
   ""
   [k]
-  (let [a (name k)]
+  (if-let [fixed
     (keyword
-      (apply str
-        (.toLowerCase (str (first a)))
-         (rest a)))))
+      (first
+        (filter (fn [k2] (= (.toLowerCase (name k2)) (.toLowerCase (name k)))) 
+            (map key
+                 (:properties dwc-fix-schema))))
+    )]
+    fixed
+    k))
 
 (defn fix-keys
   "" 
   [occ] 
    (reduce merge
      (map
-      (fn [kv] (hash-map (proper-case (key kv)) (val kv)))
+      (fn [kv] (hash-map (proper-field (key kv)) (val kv)))
         occ)))
 
 (defn fix-fields

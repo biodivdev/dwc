@@ -50,8 +50,9 @@
     => {:id "123"})
 
 (fact "Fix keys"
-  (fix-keys {:Id "123" :RecordNumber "321"})
-    => {:id "123" :recordNumber "321"})
+  (fix-keys {:Id "123" :RecordNumber "321" :collectioncode "a"})
+    => {:id "123" :recordNumber "321" :collectionCode "a"})
+
 (fact "Only allowed fields"
    (fix-fields {:recordNumber "23" :foo "bar"})
       => {:recordNumber "23"})
@@ -59,6 +60,8 @@
 (fact "apply many fixes"
   (-fix-> {:id "123"})
       => {:occurrenceID "123" :id "123"}
+  (-fix-> {:id "123" :recordnumber "321" :foo "bar"})
+      => {:occurrenceID "123" :id "123" :recordNumber "321"}
   (-fix-> [{:id "123"} {:id "321"}])
       => [{:occurrenceID "123" :id "123"} {:occurrenceID "321" :id "321"}]
   (-fix-> {:GlobalUniqueIdentifier 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
