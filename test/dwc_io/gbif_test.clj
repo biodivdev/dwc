@@ -7,3 +7,7 @@
     (:scientificName (first (:results occurrences)))
        => "Aphelandra longiflora (Lindl.) Profice"))
 
+(fact "Can read from gbif recur"
+  (let [occurrences (read-gbif {"scientificName" "Vicia faba" :limit 900})]
+    (count (:results occurrences)) => 900))
+

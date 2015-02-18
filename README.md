@@ -91,6 +91,14 @@ Include in your project.clj
         (as-file (write-csv [{:scientificName "Aphelandra longiflora" } {:scientificName "Aphelandra espirito-santensis"}]))
         (as-file "./dwc.xlsx"))
 
+#### GBIF
+
+    (use 'dwc-io.gbif)
+    (let [opts {:filters {"Family" "BROMELIACEAE"} :limit 30} ; omit limit to loop until the end
+          result (read-gbif opts)]
+     (comment "all options are optional, any combination is valid")
+     (comment "comes back as {:results [{recordhere}] :endOfRecords true :count 30 :offset 0 :limit 30}"))
+
 #### Tapir
 
     (use 'dwc-io.tapir)
