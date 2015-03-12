@@ -193,5 +193,7 @@
         "measurementDeterminedBy":{"type":"string"}
         "measurementMethod":{"type":"string"}
         "measurementRemarks":{"type":"string"}
+
+        "comments":{"type":"string"}
     }
 }
