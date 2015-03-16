@@ -34,12 +34,12 @@
          fields  (filter (partial contains? (set in-fields)) (distinct all-fields ))]
      (apply str 
       (concat
-        (interpose ";" (map #(str "\"" % "\"") fields))
+        (interpose "," (map #(str "\"" % "\"") fields))
         (list "\n")
         (flatten
           (interpose "\n"
            (for [occ occurrences]
-             (interpose ";"
+             (interpose ","
                  (for [f fields]
-                   (str "\"" (get occ (keyword f)) "\"" ))))))))))
+                   (str "\"" (.replaceAll (String/valueOf (or (get occ (keyword f)) "")) "\"" "'" ) "\"" ))))))))))
 
