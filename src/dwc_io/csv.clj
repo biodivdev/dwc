@@ -7,9 +7,11 @@
   "Read the csv as a stream calling fun at each line"
   [url fun]
   (with-open [in-file (io/reader url)]
-    (let [csv (csv/read-csv in-file :separator \; :quote \")
-          head (first csv)
-          content (rest csv)]
+    (let [headline (.readLine in-file) 
+          sep (if (> (.indexOf headline ";") (.indexOf headline ",")) \; \,)
+          csv (csv/read-csv in-file :separator sep :quote \")
+          head (.split headline (String/valueOf sep))
+          content csv]
       (doseq [line content]
         (fun
           (reduce merge {}
