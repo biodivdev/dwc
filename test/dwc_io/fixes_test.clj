@@ -27,6 +27,7 @@
           :decimalLatitude 38.89861297607422 :decimalLongitude -77.03778076171875}
       )
 
+
 (fact "Fixes occurrenceID"
   (fix-id {:occurrenceID "123" :id "321"})
     => {:occurrenceID "123" :id "321"}
@@ -45,9 +46,16 @@
   => {:decimalLatitude "10.10" :decimalLongitude 20.20}
       )
 
+(fact "Fixes bad occs"
+  (fix-decimal-coords {:decimalLatitude "ABC1010" :decimalLongitude 10.10})
+    => {:decimalLongitude 10.10}
+  (fix-decimal-coords {:decimalLatitude "20.20" :decimalLongitude 10.10})
+    => {:decimalLongitude 10.10 :decimalLatitude 20.20}
+      )
+
 (fact "Fix strings" 
-  (fix-strings {:id 123 :recordNumber nil}) 
-    => {:id "123"})
+  (fix-strings {:id 123 :recordNumber nil :scientificName "Aphelandra longiflora  "}) 
+    => {:id "123" :scientificName "Aphelandra longiflora"})
 
 (fact "Fix keys"
   (fix-keys {:Id "123" :RecordNumber "321" :collectioncode "a"})
