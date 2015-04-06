@@ -2,7 +2,7 @@
   (:use dwc-io.archive)
   (:use midje.sweet))
 
-(def test-url  (java.io.File. "resources/dwca-redlist_2013_occs.zip" ) )
+(def test-url  (clojure.java.io/resource "dwca-redlist_2013_occs.zip"))
 (def test-url2 "http://ipt.jbrj.gov.br/ipt/archive.do?r=redlist_2013_taxons")
 
 (fact "Can find core tag, config of csv and fields."
@@ -20,7 +20,7 @@
 (fact "Can read DwC-A"
  (let [occurrences (read-archive test-url)]
    (:scientificName (first occurrences)) => "Justicia scheidweileri"
-   (:recordedBy (last occurrences)) => "Lindeman, J.C."))
+   (:recordedBy (last occurrences)) => "Miranda, A.M."))
 
 (fact "Can read DwC-A taxons"
   (let [taxons (read-archive test-url2)]

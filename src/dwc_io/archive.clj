@@ -7,12 +7,12 @@
 (defn download
   "Download given URL zip into system temp dir and return the File"
   [url]
-  (let [path (str (System/getProperty "java.io.tmpdir") "/" (hash url))]
-    (if-not (.exists (file path))
+  (let [the-file (file (System/getProperty "java.io.tmpdir") (str (hash url) ".zip"))]
+    (if-not (.exists the-file)
       (do
-        (.createNewFile (file path))
-        (copy (input-stream (as-url url)) (file path))))
-    (file path)))
+        (.createNewFile the-file)
+        (copy (input-stream (as-url url)) the-file)))
+    the-file))
 
 (defn term2name
   "Takes a DwC term and turn it into a nice name keyword"
@@ -22,8 +22,9 @@
 (defn get-core
   "Find the 'core' tag of a DwC-A"
   [zip]
-  (let [metaxml (parse (reader 
-                  (.getInputStream zip (.getEntry zip "/meta.xml"))))]
+  (let [metaentry (or (.getEntry zip "meta.xml") (.getEntry zip "/meta.xml") )
+        is        (.getInputStream zip metaentry)
+        metaxml (parse (reader is))]
     (first (filter #(= :core (:tag %)) (:content metaxml)))))
 
 (defn get-char
@@ -58,8 +59,9 @@
         core (get-core zip)
         file (get-file core)
         config (get-config core)
-        fields  (get-fields core)]
-    (with-open [incsv (reader (.getInputStream zip (.getEntry zip (str "/" file))))]
+        fields  (get-fields core)
+        entry   (or (.getEntry zip file) (.getEntry zip (str "/" file)))]
+    (with-open [incsv (reader (.getInputStream zip entry))]
       (let [csv    (read-csv incsv :separator (:separator config) :quote (:quote config))
             lines  (if (:ignoreFirst config) (rest csv) csv)]
         (doseq [line lines]
@@ -72,9 +74,9 @@
 (defn read-archive
   "Read the DwC-A as a whole returning all occurrences as a vector"
   [url]
-  (let [occs (atom [])]
+  (let [occs (transient [])]
     (read-archive-stream url
       (fn [occ] 
-        (swap! occs conj occ)))
-    (deref occs)))
+        (conj! occs occ)))
+      (persistent! occs)))
 
