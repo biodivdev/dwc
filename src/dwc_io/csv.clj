@@ -30,8 +30,11 @@
 (defn write-csv
   "Return CSV of occurrences"
   [occurrences] 
-   (let [in-fields  (mapv name (mapv key (reduce merge occurrences)))
-         fields  (filter (partial contains? (set in-fields)) (distinct all-fields ))]
+   (let [in-fields   (mapv name (mapv key (reduce merge occurrences)))
+         ok-fields   (filter (partial contains? (set in-fields)) (distinct all-fields ))
+         nok-fields  (filter #(not (contains? (set all-fields) %) ) (distinct in-fields ))
+         fields      (concat ok-fields nok-fields)
+         ]
      (apply str 
       (concat
         (interpose "," (map #(str "\"" % "\"") fields))
