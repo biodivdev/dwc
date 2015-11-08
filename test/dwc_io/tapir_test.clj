@@ -4,7 +4,7 @@
 
 (def test-url "http://tapirlink.jbrj.gov.br/tapir.php/RBw")
 
-  (fact "Can create proper XML for request"
+  #_(fact "Can create proper XML for request"
       (let [xml0 (make-xml test-url)
             xml1 (make-xml test-url {:fields ["ScientificName"]})]
         (.contains xml0 
@@ -25,7 +25,7 @@
             => true
         ))
   
-  (fact "Can create XML with filters"
+  #_(fact "Can create XML with filters"
       (let [xml (make-xml test-url {:filters {"ScientificName" "Cobra"
                                               "DecimalLongitude" "123"}})
             xml0 (make-xml test-url {})]
@@ -40,7 +40,7 @@
         (.contains xml0 "<and>") => false
       ))
 
-  (fact "And does pagging"
+  #_(fact "And does pagging"
       (let [xml (make-xml test-url {:start 10 :limit 30})
             xml0 (make-xml test-url {} )]
         (.contains xml
@@ -51,12 +51,12 @@
             => true
         ))
 
-  (fact "Capable of capabilities"
+  #_(fact "Capable of capabilities"
      (let [caps (map key (:fields (get-capabilities test-url)) )]
        (first caps) => "Order"
        (last caps) => "InstitutionCode"))
   
-  (fact "Can read a tapir source"
+  #_(fact "Can read a tapir source"
     (let [occurrences (read-tapir test-url {:fields ["ScientificName" "InstitutionCode"]})]
       (:institutionCode (first (:records occurrences)))
          => "JBRJ"
@@ -73,7 +73,7 @@
          => "Trichanthera gigantea Kunth")
         )
 
-  (fact "One more read"
+  #_(fact "One more read"
     (let [occurrences (read-tapir "http://tapir.cria.org.br/tapirlink/tapir.php/specieslink"
                                   {:filters {"ScientificName" "Discocactus pseudoinsignis"} :fields [ "ScientificName"]})]
       (count (:records occurrences )) => (:total (:summary occurrences))

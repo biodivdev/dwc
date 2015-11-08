@@ -3,7 +3,7 @@
   (:use midje.sweet))
 
 (def test-url  (clojure.java.io/resource "dwca-redlist_2013_occs.zip"))
-(def test-url2 "http://ipt.jbrj.gov.br/ipt/archive.do?r=redlist_2013_taxons")
+(def test-url2 "http://ipt.jbrj.gov.br/jbrj/archive.do?r=redlist_2013_taxons")
 
 (fact "Can find core tag, config of csv and fields."
   (let [zip    (java.util.zip.ZipFile. (download test-url))
