@@ -29,7 +29,7 @@ Missing features:
 
 Include in your project.clj
 
-    [dwc-io "0.0.45"]
+    [dwc-io "0.0.46"]
 
 ### dwc-A
 
