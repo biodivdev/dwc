@@ -104,21 +104,21 @@
 (defn fix-empties
 ""
 [occ]
- (reduce merge {}
-  (for [kv occ]
-    (if (and (not (empty? (val kv))) (not (nil? (val kv))))
-      (hash-map (key kv) (val kv))))))
+  (let [temp (transient occ)]
+    (doseq [kv occ]
+      (let [v (val kv)]
+        (if (or (empty? v) (nil? v) (= "null" v))
+          (dissoc! temp (key kv)))))
+    (persistent! temp)))
 
 (defn fix-strings
 ""
 [occ]
- (fix-empties
-   (apply merge
-    (for [kv occ]
-      {(key kv)
-        (if (string? (val kv))
-          (.trim (val kv))
-          (.trim (String/valueOf (or (val kv) ""))))}))))
+  (fix-empties
+   (apply merge {}
+     (map 
+       (fn [kv] {(key kv) (.trim (String/valueOf (val kv)))})
+       occ))))
 
 (defn fix-id
 ""
@@ -138,17 +138,15 @@
 (defn proper-field
 ""
 [k]
-(if-let [fixed (fields-low (.toLowerCase (name k) ))]
-    fixed
-    k))
+  (fields-low (.toLowerCase (name k))))
 
 (defn fix-keys
   "" 
   [occ] 
-   (reduce merge
+   (apply merge {}
      (map
-      (fn [kv] (hash-map (proper-field (key kv)) (val kv)))
-        occ)))
+      (fn [kv] {(proper-field (key kv)) (val kv)})
+      occ)))
 
 (defn fix-fields
   ""
