@@ -53,8 +53,7 @@
      (if (and (not (nil? lat)) (not (nil? lng)))
        (if (not (nil? (re-matches #"[0-9]+\.[0-9]+" lat)))
          (assoc occ :decimalLatitude lat :decimalLongitude lng)
-         (assoc occ :latitude lat :longitude lng)
-         )
+         (assoc occ :latitude lat :longitude lng))
        occ))))
 
 (defn fix-coords

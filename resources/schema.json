@@ -98,6 +98,8 @@
         "verbatimLongitude":{"type":"string"}
         "verbatimCoordinateSystem":{"type":"string"}
         "verbatimSRS":{"type":"string"}
+        "latitude":{"type":"number"}
+        "longitude":{"type":"number"}
         "decimalLatitude":{"type":"number"}
         "decimalLongitude":{"type":"number"}
         "geodeticDatum":{"type":"string"}
