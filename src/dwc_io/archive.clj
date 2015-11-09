@@ -52,6 +52,29 @@
    (map #(hash-map :index (Integer/parseInt (:index %)) :name  (term2name (:term %)))
         (map :attrs (filter #(= :field (:tag %)) (:content core)))))
 
+(defn get-type
+  [core]
+   (condp = (:rowType (:attrs core))
+     "http://rs.tdwg.org/dwc/terms/Taxon" "taxon"
+     "http://rs.tdwg.org/dwc/terms/Occurrence" "occurrence"
+     nil))
+
+(defn checklist?
+  [url]
+  (let [zip (ZipFile. (download url))
+        core (get-core zip)
+        ret (= "taxon" (get-type core))]
+    (.close zip)
+    ret))
+
+(defn occurrences?
+  [url]
+  (let [zip (ZipFile. (download url))
+        core (get-core zip)
+        ret (= "occurrence" (get-type core))]
+    (.close zip)
+    ret))
+
 (defn read-archive-stream
   "Read the DwC-A zip as a stream, passing each occurrence to your function"
   [url fun] 
@@ -69,7 +92,8 @@
           (apply hash-map
             (flatten
               (for [field fields]
-               [(:name field) (get line (:index field))])))))))))
+               [(:name field) (get line (:index field))])))))))
+    (.close zip)))
 
 (defn read-archive
   "Read the DwC-A as a whole returning all occurrences as a vector"

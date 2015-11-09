@@ -1,4 +1,4 @@
-(defproject dwc-io "0.0.48"
+(defproject dwc-io "0.0.49"
   :description "Simple (and rather limited) reader/consumer for DwC-A, DIGIR, TAPIR, CSV and xlsx resources, local or online."
   :url "http://github.com/diogok/dwc-io"
   :license {:name "MIT"}
