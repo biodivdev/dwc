@@ -97,5 +97,29 @@
   (-fix-> {}) => nil
   (-fix-> nil) => nil
   (-fix-> []) => []
-  (-fix-> [nil]) => []
-      )
+  (-fix-> [nil]) => [])
+
+(fact "How fast/slow?"
+  (let [data
+          (for [i (range 0 (* 1 1024))]
+            {:scientificname "hello" :latitude i :field "nok" "month" "11" "day" 9 "recordnumber" 111})]
+            fix-keys
+            fix-strings
+            fix-dot-zero
+            fix-fields
+            fix-id
+            fix-decimal-lat
+            fix-decimal-long
+            fix-verbatim-coords
+            fix-coords
+    (time (doall (map fix-keys data)))
+    (time (doall (map fix-strings data)))
+    (time (doall (map fix-dot-zero data)))
+    (time (doall (map fix-fields data)))
+    (time (doall (map fix-id data)))
+    (time (doall (map fix-decimal-lat data)))
+    (time (doall (map fix-decimal-long data)))
+    (time (doall (map fix-verbatim-coords data)))
+    (time (doall (map fix-coords data)))
+    ))
+
