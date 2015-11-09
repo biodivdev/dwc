@@ -29,7 +29,7 @@ Missing features:
 
 Include in your project.clj
 
-    [dwc-io "0.0.46"]
+[![Clojars Project](http://clojars.org/dwc-io/latest-version.svg)](http://clojars.org/dwc-io)
 
 ### dwc-A
 
