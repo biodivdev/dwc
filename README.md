@@ -11,7 +11,7 @@ Current features:
 -- verbatimCoordinates vs decimalLatitude/decimalLongitude
 -- fields and keys case (DecimalLatitude vs decimalLatitude)
 -- empty and null values
--- naming fields (scientifcName, scientificNameWithoutAuthorship, scientificNameAuthorship)
+-- naming fields (scientifcName, scientificNameWithoutAuthorship, scientificNameAuthorship, genus and specificEpithet)
 -- occurrenceID generation, if not exists, as one of:
 --- id field
 --- globalUniqueIdentifier field
@@ -136,6 +136,7 @@ Current fixes:
 - transform latitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
 - transform verbatimLatitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
 - remove non std fields
+- some naming fields
 
 #### Validation
 

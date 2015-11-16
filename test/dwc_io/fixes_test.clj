@@ -55,7 +55,11 @@
 
 (fact "Fix strings" 
   (fix-strings {:id 123 :recordNumber nil :scientificName "Aphelandra longiflora  "}) 
-    => {:id "123" :scientificName "Aphelandra longiflora"})
+    => {:id "123" :scientificName "Aphelandra longiflora"}
+  (fix-strings {:scientificName "Auranticaria something   var. onthing"})
+   => {:scientificName "Auranticaria something var. onthing"}
+  (fix-strings {:scientificName "Auranticaria something     var.     onthing"})
+   => {:scientificName "Auranticaria something var. onthing"})
 
 (fact "Fix keys"
   (fix-keys {:Id "123" :RecordNumber "321" :collectioncode "a"})
@@ -75,22 +79,23 @@
   (-fix-> {:GlobalUniqueIdentifier 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :recordNumber ""})
       => {:occurrenceID "123" :globalUniqueIdentifier "123" :decimalLatitude 10.10 :decimalLongitude 20.20}
   (-fix-> {:id 123 :decimalLatitude "10.10" :decimalLongitude "20.20" :RecordNumber "" :day 10 :Month "11.0"})
-      => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20 :day "10" :month "11"}
-  )
+      => {:occurrenceID "123" :id "123" :decimalLatitude 10.10 :decimalLongitude 20.20 :day "10" :month "11"})
 
 (fact "Fix .0"
   (fix-dot-zero {:recordNumber "23.0" :foo "129.0.0.1"})
    => {:recordNumber "23" :foo "129.0.0.1"})
 
-#_(fact "Fix names"
-  (fix-naming {:scientificName "Auranticaria something   var. onthing"})
-   => {:scientificName "Auranticaria something var. onthing"}
+(fact "Fix names"
   (fix-naming {:scientificName "Aphelandra longiflora"})
    => {:scientificName "Aphelandra longiflora"}
-  (fix-naming {:scientificName "Aphelandra longiflora" :scientificNameAuthorship "S.Profice"})
-   => {:scientificName "Aphelandra longiflora S.Profice" :scientificNameAuthorship "S.Profice" :scientificNameWithoutAuthorship "Aphelandra longiflora"}
+  (fix-naming {:scientificName "Aphelandra longiflora" :scientificNameAuthorship "S. Profice"})
+   => {:scientificName "Aphelandra longiflora S.Profice" :scientificNameAuthorship "S.Profice" :scientificNameWithoutAuthorship "Aphelandra longiflora" :genus "Aphelandra" :specificEpithet "longiflora"}
   (fix-naming {:scientificNameWithoutAuthorship "Aphelandra longiflora" :scientificNameAuthorship "S.Profice"})
-   => {:scientificName "Aphelandra longiflora S.Profice" :scientificNameAuthorship "S.Profice" :scientificNameWithoutAuthorship "Aphelandra longiflora"}
+   => {:scientificName "Aphelandra longiflora S.Profice" :scientificNameAuthorship "S.Profice" :scientificNameWithoutAuthorship "Aphelandra longiflora" :genus "Aphelandra" :specificEpithet "longiflora"}
+  (fix-naming {:genus "Aphelandra" :specificEpithet "longiflora"})
+   => {:scientificNameWithoutAuthorship "Aphelandra longiflora" :genus "Aphelandra" :specificEpithet "longiflora"}
+  (fix-naming {:genus "Aphelandra" :specificEpithet "longiflora" :scientificNameAuthorship "S.Profice"})
+   => {:scientificNameWithoutAuthorship "Aphelandra longiflora" :scientificName "Aphelandra longiflora S.Profice" :genus "Aphelandra" :specificEpithet "longiflora" :scientificNameAuthorship "S.Profice"}
 )
 
 (fact "It work with empty and nil"
@@ -112,6 +117,7 @@
             fix-decimal-long
             fix-verbatim-coords
             fix-coords
+    (time (doall (map fix-naming data)))
     (time (doall (map fix-keys data)))
     (time (doall (map fix-strings data)))
     (time (doall (map fix-dot-zero data)))

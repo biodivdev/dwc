@@ -23,6 +23,43 @@
       {(.toLowerCase (name (key prop))) (key prop)})
     (:properties dwc-fix-schema))))
 
+(defn fix-naming
+  ""
+  [occ] 
+  (let [{genus :genus specificEpithet :specificEpithet 
+         scientificName :scientificName scientificNameAuthorship :scientificNameAuthorship
+         scientificNameWithoutAuthorship :scientificNameWithoutAuthorship} occ]
+    (cond 
+      (and (not (nil? scientificNameAuthorship))
+           (.contains scientificNameAuthorship " "))
+           (recur (assoc occ :scientificNameAuthorship (.replaceAll scientificNameAuthorship "\\s" "")))
+      (and (not (nil? genus))
+           (not (nil? specificEpithet))
+           (nil? scientificNameWithoutAuthorship))
+        (recur (assoc occ :scientificNameWithoutAuthorship (str genus " " specificEpithet)))
+      (and (nil? scientificNameWithoutAuthorship)
+           (not (nil? scientificName))
+           (not (nil? scientificNameAuthorship)))
+         (recur (assoc occ :scientificNameWithoutAuthorship (.trim (.replace scientificName scientificNameAuthorship ""))))
+      (and (nil? scientificName)
+           (not (nil? scientificNameWithoutAuthorship))
+           (not (nil? scientificNameAuthorship)))
+         (recur (assoc occ :scientificName (.trim (str scientificNameWithoutAuthorship " " scientificNameAuthorship))))
+      (and (not (nil? scientificName))
+           (not (nil? scientificNameAuthorship))
+           (not (.contains scientificName scientificNameAuthorship)))
+         (recur (assoc occ :scientificName (str scientificName " " scientificNameAuthorship)))
+      (and (not (nil? scientificName))
+           (not (nil? scientificNameWithoutAuthorship))
+           (nil? scientificNameAuthorship))
+         (recur (assoc occ :scientificNameAuthorship (.trim (.replace scientificName scientificNameWithoutAuthorship))))
+      (and (not (nil? scientificNameWithoutAuthorship))
+           (nil? genus)
+           (nil? specificEpithet))
+         (recur (assoc occ :genus (first (.split scientificNameWithoutAuthorship  " "))
+                           :specificEpithet (second (.split scientificNameWithoutAuthorship " "))))
+      :else  occ)))
+
 (defn coord2decimal
 ""
 [coord] 
@@ -117,7 +154,7 @@
   (fix-empties
    (apply merge {}
      (map 
-       (fn [kv] {(key kv) (.trim (String/valueOf (val kv)))})
+       (fn [kv] {(key kv) (.trim (.replaceAll (String/valueOf (val kv)) "[\\s]+" " "))})
        occ))))
 
 (defn fix-id
