@@ -1,5 +1,4 @@
 (ns dwc-io.csv
-  (:use dwc-io.validation)
   (:require [clojure.java.io :as io])
   (:require [clojure.data.csv :as csv]))
 
@@ -30,11 +29,7 @@
 (defn write-csv
   "Return CSV of occurrences"
   [occurrences] 
-   (let [in-fields   (mapv name (mapv key (reduce merge occurrences)))
-         ok-fields   (filter (partial contains? (set in-fields)) (distinct all-fields ))
-         nok-fields  (filter #(not (contains? (set all-fields) %) ) (distinct in-fields ))
-         fields      (concat ok-fields nok-fields)
-         ]
+   (let [fields   (mapv name (mapv key (reduce merge occurrences)))]
      (apply str 
       (concat
         (interpose "," (map #(str "\"" % "\"") fields))

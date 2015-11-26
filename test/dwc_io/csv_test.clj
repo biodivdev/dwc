@@ -15,7 +15,7 @@
 (fact "Can write csv"
   (write-csv [{:scientificName "Foo" :locality "Riverrun" }
               {:scientificName "Bar" :id 1 :habitat "test"  :decimalLongitude 20.20 :decimalLatitude 10.10}
-              {:scientificName "\"err\"" :foo "bar" :metadata {:type "occurrence"}}
+              {:scientificName "\"err\"" :foo "bar" }
               ])
    => (str "\"id\",\"habitat\",\"locality\",\"decimalLatitude\",\"decimalLongitude\",\"scientificName\",\"foo\"\n"
            "\"\",\"\",\"Riverrun\",\"\",\"\",\"Foo\",\"\"\n"

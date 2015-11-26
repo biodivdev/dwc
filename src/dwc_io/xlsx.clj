@@ -1,5 +1,4 @@
 (ns dwc-io.xlsx
-  (:use dwc-io.validation)
   (:use dk.ative.docjure.spreadsheet))
 
 (defn col
@@ -32,8 +31,7 @@
 (defn write-xlsx
   [occurrences]
   (let [path (str (System/getProperty "java.io.tmpdir") "/dwc" (hash occurrences) ".xlsx")
-        in-fields (mapv name (mapv key (reduce merge occurrences)))
-        fields  (filter (partial contains? (set in-fields)) all-fields)]
+        fields (mapv name (mapv key (reduce merge occurrences)))]
     (save-workbook! path 
      (create-workbook "occurrences"
       (vec
