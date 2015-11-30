@@ -4,7 +4,7 @@
 
 (def test-url "http://tapirlink.jbrj.gov.br/tapir.php/RBw")
 
-  #_(fact "Can create proper XML for request"
+  (fact "Can create proper XML for request"
       (let [xml0 (make-xml test-url)
             xml1 (make-xml test-url {:fields ["ScientificName"]})]
         (.contains xml0 
@@ -25,7 +25,7 @@
             => true
         ))
   
-  #_(fact "Can create XML with filters"
+  (fact "Can create XML with filters"
       (let [xml (make-xml test-url {:filters {"ScientificName" "Cobra"
                                               "DecimalLongitude" "123"}})
             xml0 (make-xml test-url {})]
@@ -40,7 +40,7 @@
         (.contains xml0 "<and>") => false
       ))
 
-  #_(fact "And does pagging"
+  (fact "And does pagging"
       (let [xml (make-xml test-url {:start 10 :limit 30})
             xml0 (make-xml test-url {} )]
         (.contains xml
