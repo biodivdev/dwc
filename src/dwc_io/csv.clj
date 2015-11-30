@@ -9,7 +9,7 @@
     (let [headline (.readLine in-file) 
           sep (if (> (.indexOf headline ";") (.indexOf headline ",")) \; \,)
           csv (csv/read-csv in-file :separator sep :quote \")
-          head (.split headline (String/valueOf sep))
+          head (-> headline (.replace "\"" "") (.replace "'" "") (.split (String/valueOf sep)))
           content csv]
       (doseq [line content]
         (fun

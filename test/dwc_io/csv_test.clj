@@ -11,7 +11,7 @@
                            {:scientificName "Vicia faba" :latitude "30.3" :longitude "8.9" :locality ""}]
   (read-csv test-file2) => [{:scientificName "Aphelandra longiflora" :latitude "10.10" :longitude "20.20" :locality "riverrun"}
                            {:scientificName "Vicia faba" :latitude "30.3" :longitude "8.9" :locality ""}]
-  (:globalUniqueIdentifier (last (read-csv test-file3) )) = "urn:lsid:biocol.org:col:15528")
+  (:collectionID (last (read-csv test-file3))) => "urn:lsid:biocol.org:col:15528")
 
 (fact "Can write csv"
   (write-csv [{:scientificName "Foo" :locality "Riverrun" }
