@@ -23,7 +23,19 @@
       {(.toLowerCase (name (key prop))) (key prop)})
     (:properties dwc-fix-schema))))
 
-(defn fix-naming
+(defn fix-spaces
+  [occ]
+  (let [fields [:scientificName :scientificNameAuthorship :scientificNameWithoutAuthorship :acceptedNameUsage]]
+    (loop [occ occ fields fields]
+      (let [f (first fields)]
+      (if (nil? f) occ
+        (if-not (nil? (occ f))
+          (recur
+            (assoc occ f (.trim (.replaceAll (occ f) "[\\s]+" " ")))
+            (rest fields))
+          (recur occ (rest fields))))))))
+
+(defn fix-naming-0
   ""
   [occ] 
   (let [{genus :genus specificEpithet :specificEpithet 
@@ -52,13 +64,16 @@
       (and (not (nil? scientificName))
            (not (nil? scientificNameWithoutAuthorship))
            (nil? scientificNameAuthorship))
-         (recur (assoc occ :scientificNameAuthorship (.trim (.replace scientificName scientificNameWithoutAuthorship))))
+         (recur (assoc occ :scientificNameAuthorship (.trim (.replace scientificName scientificNameWithoutAuthorship ""))))
       (and (not (nil? scientificNameWithoutAuthorship))
            (nil? genus)
            (nil? specificEpithet))
          (recur (assoc occ :genus (first (.split scientificNameWithoutAuthorship  " "))
                            :specificEpithet (second (.split scientificNameWithoutAuthorship " "))))
-      :else  occ)))
+      :else occ)))
+
+(defn fix-naming
+  [occ] (fix-spaces (fix-naming-0 occ)))
 
 (defn coord2decimal
 ""
@@ -138,24 +153,34 @@
     (fix-decimal-lat)
     (fix-decimal-long)))
 
-(defn fix-empties
-""
-[occ]
-  (let [temp (transient occ)]
-    (doseq [kv occ]
-      (let [v (val kv)]
-        (if (or (empty? v) (nil? v) (= "null" v))
-          (dissoc! temp (key kv)))))
-    (persistent! temp)))
+(defn fix-nils
+  [occ]
+  (into {} 
+   (filter  
+     #(and (not (nil? (val %)))
+        (if (string? (val %))
+          (not (empty? (val %))) true))
+           occ)))
+
+(defn string-0
+  [s] 
+  (if (string? s)
+    s
+    (String/valueOf s)))
+
+(defn maybe-string
+  [kv] 
+ (let [v (val kv)]
+   {(key kv) (string-0 v)}
+   ))
 
 (defn fix-strings
 ""
-[occ]
-  (fix-empties
-   (apply merge {}
-     (map 
-       (fn [kv] {(key kv) (.trim (.replaceAll (String/valueOf (val kv)) "[\\s]+" " "))})
-       occ))))
+[occ] 
+ (into {}
+  (map 
+    maybe-string
+    (fix-nils occ))))
 
 (defn fix-id
 ""
@@ -216,6 +241,7 @@
             fix-dot-zero
             fix-fields
             fix-id
+            fix-naming
             fix-decimal-lat
             fix-decimal-long
             fix-verbatim-coords

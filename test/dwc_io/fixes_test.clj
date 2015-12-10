@@ -53,12 +53,12 @@
     => {:decimalLongitude 10.10 :decimalLatitude 20.20}
       )
 
-(fact "Fix strings" 
-  (fix-strings {:id 123 :recordNumber nil :scientificName "Aphelandra longiflora  "}) 
-    => {:id "123" :scientificName "Aphelandra longiflora"}
-  (fix-strings {:scientificName "Auranticaria something   var. onthing"})
+(fact "Fix strings of names" 
+  (fix-naming {:scientificName "Aphelandra longiflora  "}) 
+    => {:scientificName "Aphelandra longiflora"}
+  (fix-naming {:scientificName "Auranticaria something   var. onthing"})
    => {:scientificName "Auranticaria something var. onthing"}
-  (fix-strings {:scientificName "Auranticaria something     var.     onthing"})
+  (fix-naming {:scientificName "Auranticaria something     var.     onthing"})
    => {:scientificName "Auranticaria something var. onthing"})
 
 (fact "Fix keys"
@@ -108,15 +108,6 @@
   (let [data
           (for [i (range 0 (* 1 1024))]
             {:scientificname "hello" :latitude i :field "nok" "month" "11" "day" 9 "recordnumber" 111})]
-            fix-keys
-            fix-strings
-            fix-dot-zero
-            fix-fields
-            fix-id
-            fix-decimal-lat
-            fix-decimal-long
-            fix-verbatim-coords
-            fix-coords
     (time (doall (map fix-naming data)))
     (time (doall (map fix-keys data)))
     (time (doall (map fix-strings data)))
