@@ -31,16 +31,16 @@
       (if (nil? f) occ
         (if-not (nil? (occ f))
           (recur
-            (assoc occ f (.trim (.replaceAll (occ f) "[\\s]+" " ")))
+            (assoc occ f (.trim (.replaceAll ^String (occ f) "[\\s]+" " ")))
             (rest fields))
           (recur occ (rest fields))))))))
 
 (defn fix-naming-0
   ""
   [occ] 
-  (let [{genus :genus specificEpithet :specificEpithet 
-         scientificName :scientificName scientificNameAuthorship :scientificNameAuthorship
-         scientificNameWithoutAuthorship :scientificNameWithoutAuthorship} occ]
+  (let [{^String genus :genus ^String specificEpithet :specificEpithet 
+         ^String scientificName :scientificName ^String scientificNameAuthorship :scientificNameAuthorship
+         ^String scientificNameWithoutAuthorship :scientificNameWithoutAuthorship} occ]
     (cond 
       (and (not (nil? scientificNameAuthorship))
            (.contains scientificNameAuthorship " "))
@@ -82,9 +82,9 @@
    (if (and (not (nil? ncoord)) (not (empty? ncoord)) (= 4 (count ncoord)) )
      (*
        (float
-         (+ (Integer/valueOf (nth ncoord 0))
-            (/ (Integer/valueOf (nth ncoord 1)) 60)
-            (/ (Integer/valueOf (nth ncoord 2)) 3600)))
+         (+ (Integer/valueOf ^String (nth ncoord 0))
+            (/ (Integer/valueOf ^String (nth ncoord 1)) 60)
+            (/ (Integer/valueOf ^String (nth ncoord 2)) 3600)))
        (if (or 
              (= "w" (nth ncoord 3))
              (= "W" (nth ncoord 3))
@@ -127,7 +127,7 @@
 (if (not (nil? (:decimalLongitude occ)))
   (if (string? (:decimalLongitude occ))
     (if (not (nil? (re-matches #"-?[0-9]+\.?[0-9]+" (:decimalLongitude occ))))
-      (assoc occ :decimalLongitude (Double/valueOf (:decimalLongitude occ)))
+      (assoc occ :decimalLongitude (Double/valueOf ^String (:decimalLongitude occ)))
       (dissoc occ :decimalLongitude))
     (if (number? (:decimalLongitude occ))
       occ
@@ -139,7 +139,7 @@
 (if (not (nil? (:decimalLatitude occ)))
   (if (string? (:decimalLatitude occ))
     (if (not (nil? (re-matches #"-?[0-9]+\.?[0-9]+" (:decimalLatitude occ))))
-      (assoc occ :decimalLatitude (Double/valueOf (:decimalLatitude occ)))
+      (assoc occ :decimalLatitude (Double/valueOf ^String (:decimalLatitude occ)))
       (dissoc occ :decimalLatitude))
     (if (number? (:decimalLatitude occ))
       occ

@@ -1,4 +1,4 @@
-(defproject dwc-io "0.0.54"
+(defproject dwc-io "0.0.55"
   :description "Simple (and rather limited) reader/consumer for DwC-A, DIGIR, TAPIR, CSV and xlsx resources, local or online."
   :url "http://github.com/diogok/dwc-io"
   :license {:name "MIT"}
@@ -10,7 +10,9 @@
                  [bigml/closchema "0.6.1"]
                  [clj-http "2.0.0"]]
   :repositories [["clojars" {:sign-releases false}]]
+  :global-vars {*warn-on-reflection* true}
   :profiles {:uberjar {:aot :all}
              :jar {:aot :all}
-             :dev {:dependencies [[midje "1.8.2"]]
+             :dev {
+                   :dependencies [[midje "1.8.2"]]
                    :plugins [[lein-midje "3.1.3"]]}})

@@ -5,7 +5,7 @@
 (defn read-csv-stream
   "Read the csv as a stream calling fun at each line"
   [url fun]
-  (with-open [in-file (io/reader url)]
+  (with-open [in-file ^java.io.BufferedReader (io/reader url)]
     (let [headline (.readLine in-file) 
           sep (if (> (.indexOf headline ";") (.indexOf headline ",")) \; \,)
           csv (csv/read-csv in-file :separator sep :quote \")

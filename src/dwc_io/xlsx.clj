@@ -8,7 +8,7 @@
 (defn read-xlsx-stream
   "Read the xlsx as a stream calling fun at each line"
   [url fun]
-  (let [workbook (load-workbook url)
+  (let [workbook ^org.apache.poi.xssf.usermodel.XSSFWorkbook (load-workbook url)
         sheet    (.getSheetAt workbook 0)
         head     (vec (map read-cell
                    (->> sheet (.iterator) (iterator-seq) (first) (.cellIterator) (iterator-seq))))

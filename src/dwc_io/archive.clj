@@ -16,12 +16,12 @@
 
 (defn term2name
   "Takes a DwC term and turn it into a nice name keyword"
-  [term] (keyword (.substring term 
+  [^String term] (keyword (.substring term 
                    (inc (.lastIndexOf term "/")))))
 
 (defn get-core
   "Find the 'core' tag of a DwC-A"
-  [zip]
+  [^ZipFile zip]
   (let [metaentry (or (.getEntry zip "meta.xml") (.getEntry zip "/meta.xml") )
         is        (.getInputStream zip metaentry)
         metaxml (parse (reader is))]
@@ -29,7 +29,7 @@
 
 (defn get-char
   "Transform the separator/quote csv char properly"
-  [sep]
+  [^String sep]
   (if (= "\\t" sep) \tab 
     (if (= "" sep) \u0000  
     (if (> (.length sep) 0) (.charAt sep 0)))))
@@ -61,7 +61,7 @@
 
 (defn checklist?
   [url]
-  (let [zip (ZipFile. (download url))
+  (let [zip (ZipFile. ^java.io.File (download url))
         core (get-core zip)
         ret (= "taxon" (get-type core))]
     (.close zip)

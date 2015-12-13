@@ -6,7 +6,7 @@
 (def test-url2 "http://ipt.jbrj.gov.br/jbrj/archive.do?r=redlist_2013_taxons")
 
 (fact "Can find core tag, config of csv and fields."
-  (let [zip    (java.util.zip.ZipFile. (download test-url))
+  (let [zip    (java.util.zip.ZipFile. ^java.io.File (download test-url))
         core   (get-core zip)
         dtype  (get-type core)
         fields (get-fields core)
