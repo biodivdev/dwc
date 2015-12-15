@@ -1,35 +1,14 @@
 # dwc-io
 
-This is a simple clojure/java library for writing, accessing and reading occurrences.
-
-Current features:
-- Reading and streaming from: dwc-A, XLSX, CSV, JSON, GEOJSON, TAPIR, DIGIR, GBIF
-- Writing to: JSON, GEOJSON, XLSX, CSV
-- Search, Filters and pagging on Tapir and Digir
-- Validate records
-- Apply common fixes
--- verbatimCoordinates vs decimalLatitude/decimalLongitude
--- fields and keys case (DecimalLatitude vs decimalLatitude)
--- empty and null values
--- naming fields (scientifcName, scientificNameWithoutAuthorship, scientificNameAuthorship, genus and specificEpithet)
--- occurrenceID generation, if not exists, as one of:
---- id field
---- globalUniqueIdentifier field
---- institutionCode:collectionCode:catalogNumber
---- randomUUID
-
-Missing features:
-- Java Interface
-- Finish validation
-- Writing on dwc-A and XLSX 
+This is a simple clojura library for writing, accessing and reading darwincore occurrences.
 
 ## Usage
-
-### From Clojure
 
 Include in your project.clj
 
 [![Clojars Project](http://clojars.org/dwc-io/latest-version.svg)](http://clojars.org/dwc-io)
+
+## Reading and Writing
 
 ### dwc-A
 
@@ -41,7 +20,7 @@ Include in your project.clj
      (fn [record]
       (comment "reads the archive as a stream")))
 
-#### CSV, using ';'(column) as  separator and '"'(double-quotes) as quote
+### CSV
 
     (use 'dwc-io.csv) 
     (let [records (read-csv "path-to.csv")]
@@ -54,7 +33,7 @@ Include in your project.clj
     (spit "dwc-io.csv"
         (write-csv [{:scientificName "Aphelandra longiflora" } {:scientificName "Aphelandra espirito-santensis"}]))
 
-#### JSON & GeoJSON
+### JSON & GeoJSON
 
     (use 'dwc-io.json) 
     (let [records (read-json "path-to.json")]
@@ -76,7 +55,7 @@ Include in your project.clj
     (spit "occs.gjson" (write-geojson [ {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"} ]))
     (spit "occs.json" (write-json [ {:decimalLatitude 10 :decimalLongitude 20 :scientificName "Vicia faba"} ]))
 
-#### XLSX
+### XLSX
 
     (use 'dwc-io.xlsx) 
     (let [records (read-xlsx "path-to.xlsx")]
@@ -91,7 +70,7 @@ Include in your project.clj
         (as-file (write-csv [{:scientificName "Aphelandra longiflora" } {:scientificName "Aphelandra espirito-santensis"}]))
         (as-file "./dwc.xlsx"))
 
-#### GBIF
+### GBIF Search API
 
     (use 'dwc-io.gbif)
     (let [opts {:filters {"Family" "BROMELIACEAE"} :limit 30} ; omit limit to loop until the end
@@ -99,7 +78,7 @@ Include in your project.clj
      (comment "all options are optional, any combination is valid")
      (comment "comes back as {:results [{recordhere}] :endOfRecords true :count 30 :offset 0 :limit 30}"))
 
-#### Tapir
+### Tapir
 
     (use 'dwc-io.tapir)
     (let [opts {:fields ["ScientificName"] :filters {"Family" "BROMELIACEAE"} :start 10 :limit 30}
@@ -107,7 +86,7 @@ Include in your project.clj
      (comment "all options are optional, any combination is valid")
      (comment "comes back as {:records [{recordhere}] :summary {:start 10 :next 30 :total 1000 :end false}}"))
 
-#### Digir
+### Digir
 
     (use 'dwc-io.digir)
     (let [opts {:filters {"Family" "BROMELIACEAE"} :start 10 :limit 30}
@@ -115,7 +94,23 @@ Include in your project.clj
      (comment "all options are optional, any combination is valid")
      (comment "comes back as {:records [{recordhere}] :summary {:total 1000 :start 10 :limit 30 :end false}}"))
 
-#### Applying fixes
+## Applying common fixes
+
+Fixes some common problems with occurrence records.
+
+Current fixes:
+
+- normalize keys: ScientificName -> scientificName
+- decimal data into double values
+- empty and nul fields get removed
+- all non decimal fields as strings
+- generade occurrenceID from: id, globalUniqueIdentifier, instutition+catalog+number or generate an UUID
+- transform latitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
+- transform verbatimLatitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
+- remove non standart fields
+- trim spaces
+- normalize the use of the taxonomic fields (like scientificName = scientificNameWithoutAuthorship + scientificNameAuthorship, and the other way)
+
 
     (use 'dwc-io.fixes)
 
@@ -128,26 +123,14 @@ Include in your project.clj
     (-fix-> record)
     (comment "apply all fixes, in single or vector of records")
 
-Current fixes:
-- normalize keys: ScientificName -> scientificName
-- decimal data into double values
-- empty fields get removed
-- generade occurrenceID from: id, globalUniqueIdentifier, instutition+catalog+number or generate a unique uud
-- transform latitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
-- transform verbatimLatitude into decimalLatitude (and longitude), if applicable, converting coordinates (radians2decimal)
-- remove non std fields
-- some naming fields
+## Validation
 
-#### Validation
+This feature validate against the darwincore schema, which is mostly the presence of known only fields, but not their contents.
 
     (use 'dwc-io.validation)
 
     (validate record)
     (comment "tries to validate record based on information of http://rs.tdwg.org/dwc/terms/")
-
-### From Java
-
-Soon
 
 ## License
 
