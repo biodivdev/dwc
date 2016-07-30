@@ -78,6 +78,18 @@ Include in your project.clj
      (comment "all options are optional, any combination is valid")
      (comment "comes back as {:results [{recordhere}] :endOfRecords true :count 30 :offset 0 :limit 30}"))
 
+### GBIF specie lookup
+
+    (use 'dwc-io.gbif)
+    (def taxon (get-a-taxon "ACANTHACEAE"))
+    (def taxon (get-a-taxon "Aphelandra longiflora"))
+
+### GBIF download
+
+    (use 'dwc-io.gbif)
+    (def download-key (request-download {:user "username" :password "pasword" :email "username@email.com" :filters [[:FAMILY_KEY :equals 123]]}))
+    (def dwca-url (download-url download-key))
+
 ### Tapir
 
     (use 'dwc-io.tapir)

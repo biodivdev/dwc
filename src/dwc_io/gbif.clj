@@ -8,8 +8,7 @@
           limit-url  (str "limit=" (if (> limit 300) 300 limit) "&offset=" offset)
           url (str "http://api.gbif.org/v1/occurrence/search?" filters-url "&" limit-url)
           result (read-str (:body (http/get url)) :key-fn keyword)]
-      result
-      )))
+      result)))
 
 (defn read-gbif
   "Read the GBIF as a whole returning all occurrences as a vector"
@@ -27,9 +26,7 @@
                 (pmap
                   (fn [offset] (:results (read-gbif-0 filters offset 300)))
                   (map first (partition-all 300 (range reoffset relimit))))))
-         r0
-         ))
-     ))
+         r0))))
   ([filters offset limit acc]
     (let [filters-url (reduce #(str "&" %1 (key %2) "=" (.replace (val %2) " " "+" )) "" filters)
           limit-url  (str "limit=" (if (> limit 300) 300 limit) "&offset=" offset)
@@ -37,7 +34,30 @@
           result (read-str (:body (http/get url)) :key-fn keyword)]
       (if (and (not (:endOfRecords result)) (> limit (+ (count acc) (count (:results result)))))
         (recur filters (+ offset 300) limit (concat acc (:results result) ))
-        (assoc result :results (concat acc (:results result)))
-        )
-      )))
+        (assoc result :results (concat acc (:results result)))))))
+
+(defn get-a-taxon
+  [n] 
+  (read-str
+    (:body (http/get (str "http://api.gbif.org/v1/species?name=" n)))
+    :key-fn keyword))
+
+(defn build-pred
+  [pred]
+  {:type (name (second pred)) 
+   :key  (name (first pred))
+   :value (last pred)})
+
+(defn request-download
+  [opts]
+   (let [url   (str "http://api.gbif.org/v1/occurrence/download/request")
+         preds {:type "and" :predicates (map build-pred (:filters opts))}
+         body  {:creator (:user opts) :notification_address [ (:email opts )] :predicate preds}]
+     (:body (http/post url
+                         {:basic-auth [(:user opts) (:password opts)]
+                          :headers {"Content-Type" "application/json"}
+                          :body (write-str body)}))))
+
+(defn download-url
+  [k] (str "http://api.gbif.org/v1/occurrence/download/request/" k))
 
