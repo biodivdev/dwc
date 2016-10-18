@@ -1,0 +1,19 @@
+{
+  "taxonRank":{
+    "CLASSE":"class",
+    "DIVISAO":"division",
+    "ESPECIE":"species",
+    "FAMILIA":"family",
+    "FORMA":"form",
+    "GENERO":"genus",
+    "ORDEM":"order",
+    "SUB_ESPECIE":"subspecies",
+    "SUB_FAMILIA":"subfamily",
+    "TRIBO":"tribe",
+    "VARIEDADE":"variety"
+  },
+  "taxonomicStatus":{
+    "NOME_ACEITO":"accepted",
+    "SINONIMO":"synonym"
+  }
+}

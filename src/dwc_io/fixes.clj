@@ -7,6 +7,12 @@
       (clojure.java.io/resource "schema.json"))
     :key-fn keyword))
 
+(def translations
+  (read-str 
+    (slurp
+      (clojure.java.io/resource "translations.json"))
+    :key-fn keyword))
+
 (def fields (set (map key (:properties dwc-fix-schema))))
 
 (def fields-low
@@ -74,6 +80,18 @@
 
 (defn fix-naming
   [occ] (fix-spaces (fix-naming-0 occ)))
+
+(defn translate
+  [field taxa]
+  (assoc taxa field 
+    (or ((translations field) (keyword (field taxa)) ) (field taxa))))
+
+(defn fix-translations
+  [taxa] 
+  (->> taxa
+    (translate :taxonRank)
+    (translate :taxonomicStatus)
+      ))
 
 (defn coord2decimal
 ""
@@ -182,7 +200,15 @@
     maybe-string
     (fix-nils occ))))
 
-(defn fix-id
+(defn fix-id-taxon
+""
+[taxon] 
+ (if-not (nil? (:taxonID taxon)) taxon
+   (if-not (nil? (:id taxon)) (assoc taxon :taxonID (:id taxon))
+     (if-not (nil? (:globalUniqueIdentifier taxon)) (assoc taxon :taxonID (:globalUniqueIdentifier taxon))
+         (assoc taxon :taxonID (str "urn:taxon:" (java.util.UUID/randomUUID)))))))
+
+(defn fix-id-occ
 ""
 [occ] 
  (if-not (nil? (:occurrenceID occ)) occ
@@ -196,6 +222,8 @@
                                         (:collectionCode occ) ":"
                                         (:catalogNumber occ)))
          (assoc occ :occurrenceID (str "urn:occurrence:" (java.util.UUID/randomUUID))))))))
+
+(def fix-id fix-id-occ)
 
 (defn proper-field
 ""
@@ -228,6 +256,41 @@
   [occ]
    (reduce merge
     (map rm-dot-zero occ)))
+
+(defn fix-taxon
+  ""
+  [data]
+   (if (vector? data) 
+      (filter #(not (nil? %)) (map fix-taxon data))
+      (if (or (nil? data) (empty? data)) nil
+        (-> data
+            fix-keys
+            fix-strings
+            fix-fields
+            fix-id-taxon
+            fix-naming
+            fix-translations
+            ))))
+
+
+(defn fix-occ
+  ""
+  [data]
+   (if (vector? data) 
+      (filter #(not (nil? %)) (map fix-occ data))
+      (if (or (nil? data) (empty? data)) nil
+        (-> data
+            fix-keys
+            fix-strings
+            fix-dot-zero
+            fix-fields
+            fix-id-occ
+            fix-naming
+            fix-decimal-lat
+            fix-decimal-long
+            fix-verbatim-coords
+            fix-coords
+            ))))
 
 (defn -fix->
   ""

@@ -98,6 +98,10 @@
    => {:scientificNameWithoutAuthorship "Aphelandra longiflora" :scientificName "Aphelandra longiflora S.Profice" :genus "Aphelandra" :specificEpithet "longiflora" :scientificNameAuthorship "S.Profice"}
 )
 
+(fact "Fix translations"
+      (fix-translations {:taxonomicStatus "NOME_ACEITO"}) => {:taxonomicStatus "accepted" :taxonRank nil}
+      (fix-translations {:taxonRank "ESPECIE"}) => {:taxonRank "species" :taxonomicStatus nil})
+
 (fact "It work with empty and nil"
   (-fix-> {}) => nil
   (-fix-> nil) => nil
